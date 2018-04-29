@@ -6,20 +6,29 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class FormatdurationPipe implements PipeTransform {
 
   transform(value: number, args?: any): any {
-    let hours = Math.floor(value / 3600);
-    value %= 3600;
-    let minutes = Math.floor(value / 60);
-    let seconds = value % 60;
-    if( hours > 0 ){
-      return hours+ ':'+minutes+':'+seconds;
-    } else {
-      return minutes + ':' + this.zeroPad(seconds, 2);
+    if(value){
+      let hours = Math.floor(value / 3600);
+      value %= 3600;
+      let minutes = Math.floor(value / 60);
+      let seconds = value % 60;
+      if( hours > 0 ){
+        return `${hours}:${this.formatTimeComponent(minutes)}:${this.formatTimeComponent(seconds)}`;
+      } else {
+        return `${minutes}:${this.formatTimeComponent(seconds)}`;
+      }
+    }else{
+      return '';
     }
   }
 
-  zeroPad(num:number, places: number) {
-    var zero = places - num.toString().length + 1;
-    return Array(+(zero > 0 && zero)).join("0") + num;
+  private formatTimeComponent(num:number) {
+    if(num <=0){
+      return '00';
+    }
+    if(num < 10){
+      return '0'+num;
+    }
+    return num.toString();
   }
 
 }
