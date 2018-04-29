@@ -7,4 +7,4 @@ script:
   - dotnet build ./IdentityServer/
   - dotnet build ./AdminSite/
   - dotnet test ./Tests/
-  - npm test ./Frontend/ClientApp
+  - cd Frontend/ClientApp && npm test
