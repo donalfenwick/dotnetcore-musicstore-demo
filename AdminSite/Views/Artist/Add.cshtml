@@ -1,0 +1,54 @@
+﻿@model CreateArtistViewModel
+@{
+    ViewData["Title"] = "Add artist";
+}
+
+<h2>Add artist</h2>
+
+
+<form asp-action="Add" asp-controller="Artist" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group row">
+        <label asp-for="@Model.Name" class=" col-md-2 col-form-label">Name</label>
+        <div class="col-md-10">
+            <input asp-for="@Model.Name" placeholder="Artist name" />
+            <span asp-validation-for="@Model.Name" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="@Model.BioText" class=" col-md-2 col-form-label">Bio</label>
+        <div class="col-md-10">
+            <textarea asp-for="@Model.BioText" placeholder="Bio text" class="form-control"></textarea>
+            <span asp-validation-for="@Model.BioText" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="@Model.Genres" class="col-form-label col-md-2 ">Genres</label>
+        <div class="col-md-10">
+            @for (int i = 0; i < Model.Genres.Count; i++)
+            {
+                <label class="checkbox-inline">
+                    <input type="checkbox" asp-for="@Model.Genres[i].IsSelected" class="form-check-input" />
+                    <input type="hidden" asp-for="@Model.Genres[i].Name" />
+                    <span class="control-label">@Model.Genres[i].Name</span>
+                </label>
+            }
+        </div>
+        <span asp-validation-for="@Model.Genres" class="text-danger"></span>
+    </div>
+
+    <div class="form-group row">
+        <label asp-for="@Model.BioImage" class="col-md-2 col-form-label">Bio image</label>
+        <div class="col-md-10">
+            <input type="file" class="form-control" asp-for="@Model.BioImage" style="height: auto;" />
+            <span asp-validation-for="@Model.BioImage" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            <button type="submit" class="btn btn-primary">Add artist</button>
+            <a asp-action="index" class="btn btn-default">Cancel</a>
+        </div>
+    </div>
+</form>

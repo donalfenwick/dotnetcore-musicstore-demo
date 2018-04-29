@@ -1,0 +1,1 @@
+Frontend project - hosts angular application and the webapi controllers

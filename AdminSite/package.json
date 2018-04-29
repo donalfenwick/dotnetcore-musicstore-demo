@@ -1,0 +1,28 @@
+{
+  "name": "adminsite",
+  "version": "1.0.0",
+  "description": "",
+  "main": "gulpfile.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "devDependencies": {
+    "@types/handlebars": "^4.0.36",
+    "@types/jquery": "^3.3.1",
+    "gulp": "^3.9.1",
+    "gulp-concat": "^2.6.1",
+    "gulp-less": "^4.0.0",
+    "gulp-npm-dist": "^1.0.0",
+    "gulp-rename": "^1.2.2",
+    "gulp-typescript": "^4.0.1",
+    "gulp-watch": "^5.0.0",
+    "typescript": "^2.7.2"
+  },
+  "dependencies": {
+    "handlebars": "^4.0.11",
+    "html5sortable": "^0.8.1",
+    "jquery-duration-picker": "^1.0.0"
+  }
+}

@@ -1,0 +1,13 @@
+<html>
+    <head>
+            <title></title>
+        </head>
+        <body>
+        <script src="oidc-client.min.js"></script>
+        <script>
+            // try and update the token from inside the iframe
+            new Oidc.UserManager().signinSilentCallback()
+                .catch((err) => { console.log(err); });
+        </script>
+    </body>
+</html>

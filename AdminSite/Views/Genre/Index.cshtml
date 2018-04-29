@@ -1,0 +1,40 @@
+﻿@model GenreIndexPageViewModel
+@{
+    ViewData["Title"] = "Manage genres";
+}
+
+<div class="container page-header-container">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Manage genres</h2>
+        </div>
+        <div class="col-md-4">
+            <a asp-action="add" class="btn btn-primary pull-right">Add genre</a>
+        </div>
+    </div>
+</div>
+
+
+<div class="container index-list">
+    <div class="row header">
+        <div class="col-md-6">Name</div>
+        <div class="col-md-2">Created</div>
+        <div class="col-md-1">Albums</div>
+        <div class="col-md-1">Artists</div>
+        <div class="col-md-2"></div>
+    </div>
+    @foreach (var genre in Model.Genres)
+    {
+    <div class="row">
+        <div class="col-md-6">@genre.Name</div>
+        <div class="col-md-2">@genre.Created</div>
+        <div class="col-md-1">@genre.TotalAlbums</div>
+        <div class="col-md-1">@genre.TotalArtists</div>
+        <div class="col-md-2">
+            <div class="action-links">
+                <a asp-action="remove" asp-route-name="@genre.Name" class="btn btn-danger btn-xs">delete</a>
+            </div>
+        </div>
+    </div>
+    }
+</div>

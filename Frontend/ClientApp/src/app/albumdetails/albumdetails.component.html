@@ -1,0 +1,48 @@
+<div class="col album-details">
+  <div class="row">
+      
+    <div *ngIf="album">
+      <div class="row page-header-row">
+        <div class="col-md-4">
+            <img class="cover-image" src="{{service.apiHost + album.coverImageUrl}}" />
+        </div>
+        <div class="col-md-6">
+            <h3 class="artist">{{album.artistName}}</h3>
+            <h2 class="album-title">{{album.title}}</h2>
+
+            <div class="button-container">
+              <button class="btn btn-primary" [disabled]="!ownedStatus || ownedStatus.isOwned" (click)="buyAlbumButtonOnClick()">{{!ownedStatus || !ownedStatus.isOwned ? 'Buy album' : 'You already own this album'}}</button>
+            </div>
+            <div class="details-container">
+              <p><strong>Producer: </strong>{{album.producer}}</p>
+              <p><strong>Label: </strong>{{album.label}}</p>
+              <p><strong>Released: </strong>{{album.releaseDate | date:'dd/MM/yyyy'}}</p>
+              <p><strong>Duration: </strong>{{album.totalDurationInSeconds | formatduration}}</p>
+              
+              <strong>Genres: </strong>
+              <span *ngFor="let genre of album.genres; let isLast=last">
+                  {{genre}}{{isLast ? '' : ', '}}
+              </span>
+            </div>
+        </div>
+        <div class="col-md-2">
+          <button class="btn btn-default pull-right" (click)="backButtonOnClick()">Back</button>
+        </div>
+      </div>
+      
+      <div class="row">
+          <div class="col-md-12">
+        <p>
+          {{album.descriptionText}}
+        </p>
+
+        <h3>Tracks</h3>
+        <div class="row track-row" *ngFor="let t of album.tracks">
+          <div class="col-md-10 track-title"><div class="number">{{t.trackNumber}}</div> {{t.title}}</div>
+          <div class="col-md-2"><div class="pull-right">{{t.durationInSeconds | formatduration}}</div></div>
+        </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>

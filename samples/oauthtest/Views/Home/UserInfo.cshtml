@@ -1,0 +1,82 @@
+﻿@using Microsoft.AspNetCore.Authentication;
+@{
+    ViewData["Title"] = "User info";
+}
+<h2>User info</h2>
+
+
+@if (User.Identity.IsAuthenticated)
+{
+    <div>User @User.Identity.Name signed in.</div>
+
+
+    <h3>User claims</h3>
+
+    <b>DbUsername: @ViewBag.dbusername </b>
+
+
+    <dl>
+        @foreach (var claim in User.Claims)
+        {
+            <dt>@claim.Type</dt>
+            <dd>@claim.Value</dd>
+
+        }
+        <dt>access token</dt>
+        <dd>@await ViewContext.HttpContext.GetTokenAsync("access_token")</dd>
+
+        <dt>refresh token</dt>
+        <dd>@await ViewContext.HttpContext.GetTokenAsync("refresh_token")</dd>
+    </dl>
+
+    <div>accessToken:</div>
+<div><textarea readonly style="width: 900px; height: 90px;">@ViewBag.accessToken</textarea></div>
+    <div>idToken: </div>
+<div><textarea readonly  style="width: 900px; height: 90px;">@ViewBag.idToken</textarea> </div>
+
+    <button id="testGetGenresButton">Test authenticated request to api</button>
+
+    <div id="testGetGenresOutput"></div>
+
+    <script>
+        var bearerToken = '@(ViewBag.accessToken)';
+        $(function(){
+
+            $('#testGetGenresButton').click(requestGenreList);
+
+            function requestGenreList(){
+                $.ajax({
+                    url: "http://localhost:5602/api/genre",
+                    method: "GET",
+                    dataType: "json",
+                    crossDomain: true,
+                    contentType: "application/json; charset=utf-8",
+                    cache: false,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader("Authorization", "Bearer " + bearerToken);
+                    }
+                  })
+                  .done(function(data) {
+                    console.log('success', data);
+                    var html = '<h3>Results</h3><ul>';
+                    for(var i = 0; i < data.genres.length; i++){
+                        html+= '<li>'+data.genres[i]+'</li>';
+                    }
+                    html+='</li>';
+
+                    $('#testGetGenresOutput').html(html);
+                  })
+                  .fail(function(xhr) {
+                    console.log('error', xhr);
+                  });
+            }
+        });
+    </script>
+
+}
+else
+{
+    <div>User not signed in</div>
+
+
+}

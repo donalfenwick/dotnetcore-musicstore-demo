@@ -1,0 +1,65 @@
+﻿@model ArtistIndexViewModel
+@{
+    ViewData["Title"] = "Manage artists";
+}
+
+<div class="container page-header-container">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Manage artists</h2>
+        </div>
+        <div class="col-md-4">
+            <a asp-action="Add" class="btn btn-primary pull-right">Add artist</a>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container index-list">
+    <div class="row header">
+        <div class="col-md-4">Name</div>
+        <div class="col-md-2">Updated</div>
+        <div class="col-md-2">Status</div>
+        <div class="col-md-4"></div>
+    </div>
+    @foreach(var a in Model.Items)
+    {
+    <div class="row">
+        <div class="col-md-4">@a.Name</div>
+        <div class="col-md-2">@a.Updated</div>
+        <div class="col-md-2">@(a.Status.HasValue ? a.Status.Value.ToString() : "unknown")</div>
+        <div class="col-md-4">
+            <div class="action-links">
+                <a asp-action="edit" asp-route-id="@a.Id" class="btn btn-primary btn-xs">edit</a>
+                <button type="submit" class="btn btn-danger btn-xs" asp-action="Delete" asp-route-id="@a.Id">delete</button>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+
+@if(Model.TotalPages > 1){
+<div class="container">
+    <div class="row">
+        <div class="col">
+            <div class="text-center">
+                <ul class="pagination">
+                    <li class="@(Model.PageIndex == 0 ? "disabled" : "")">
+                        <a asp-action="Index" asp-controller="Artist" asp-route-page="0">&laquo;</a>
+                    </li>
+                    @for(int i = 0; i < Model.TotalPages; i++){
+                        
+                        <li class="@(i==Model.PageIndex ? "active":"")">
+                            <a asp-action="Index" asp-controller="Artist" asp-route-page="@i+1">@(i+1)</a>
+                        </li>
+                    }
+                    <li class="@(Model.PageIndex == Model.TotalPages -1 ? "disabled" : "")">
+                        <a asp-action="Index" asp-controller="Artist" asp-route-page="@Model.TotalPages-1">&raquo;</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+}

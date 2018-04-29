@@ -1,0 +1,1 @@
+Console application used to create the database and fill it with sample data before the application is run for the first time.

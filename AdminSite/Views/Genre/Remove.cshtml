@@ -1,0 +1,23 @@
+﻿@model GenreItemViewModel
+@{
+    ViewData["Title"] = "Remove genre";
+}
+<form asp-action="Remove" asp-controller="Genre" method="post">
+    <input type="hidden" asp-for="Name" />
+    <div class="row">
+        <div class="col">
+            <h2>Delete genre</h2>
+
+            <div>Are you sure you wish to delete the genre <strong>@Model.Name</strong> from the database?</div>
+
+            @if (Model.TotalAlbums > 0 || Model.TotalArtists > 0)
+            {
+                <small><strong>Note:</strong>This genre has @Model.TotalArtists artists and @Model.TotalAlbums associated with it. Deleting it will remove it from those entities.</small>
+            }
+
+            <button type="submit" class="btn btn-primary">Delete</button> 
+            <a asp-action="index" asp-controller="Genre" class="btn btn-default">Cancel</a>
+        </div>
+    </div>
+
+</form>

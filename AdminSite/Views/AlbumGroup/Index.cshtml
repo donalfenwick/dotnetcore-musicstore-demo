@@ -1,0 +1,45 @@
+﻿@model AlbumGroupIndexPageViewModel
+@{
+    ViewData["Title"] = "Manage groups";
+}
+
+
+<div class="container page-header-container">
+    <div class="row">
+        <div class="col-md-8">
+            <h2>Manage album groups</h2>
+        </div>
+        <div class="col-md-4">
+            <a asp-action="Add" class="btn btn-primary pull-right">Add group</a>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container index-list">
+    <div class="row header">
+        <div class="col-md-3">Key</div>
+        <div class="col-md-2">Name</div>
+        <div class="col-md-2">Updated</div>
+        <div class="col-md-2">Items</div>
+        <div class="col-md-3"></div>
+    </div>
+    @foreach(var i in Model.Items)
+    {
+    <div class="row">
+        <div class="col-md-3">@i.Key</div>
+        <div class="col-md-2">@i.Name</div>
+        <div class="col-md-2">@i.Updated</div>
+        <div class="col-md-2">@i.TotalAlbums</div>
+        <div class="col-md-3">
+            <div class="action-links">
+                <a asp-action="edit" asp-route-id="@i.Id" class="btn btn-primary btn-xs">edit</a>
+                <a asp-action="reorder" asp-route-id="@i.Id" class="btn btn-primary btn-xs">reorder</a>
+                <button type="submit" class="btn btn-danger btn-xs" asp-action="Delete" asp-route-id="@i.Id">delete</button>
+            </div>
+        </div>
+    </div>
+    }
+</div>
+

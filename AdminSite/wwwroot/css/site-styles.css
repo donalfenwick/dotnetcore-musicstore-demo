@@ -1,0 +1,98 @@
+.image-preview img {
+  max-width: 140px;
+}
+
+.durationpicker-container {
+  background-color: white;
+  border: 1px solid darkgrey;
+  display: inline-block;
+  width: auto;
+}
+.durationpicker-innercontainer {
+  display: inline-block;
+  width: auto;
+  padding-right: 5px;
+}
+.durationpicker-duration {
+  width: 50px;
+  display: inline-block;
+  border: none;
+  padding-left: 10%;
+  text-align: right;
+}
+.durationpicker-label {
+  display: inline-block;
+}
+
+.index-list .row {
+  background-color: #fff;
+  transition: background-color 100ms linear;
+  padding-top: 10px;
+  padding-bottom: 10px;
+  border-radius: 5px;
+}
+.index-list .row.header {
+  background-color: transparent;
+}
+.index-list .row.header > div {
+  font-weight: bold;
+}
+.index-list .row:hover {
+  background-color: #f3f3f3;
+}
+.index-list .row.header:hover {
+  background-color: transparent;
+}
+.index-list .action-links {
+  width: 100%;
+  text-align: right;
+}
+
+.page-header-container {
+  margin-top: 20px;
+  margin-bottom: 10px;
+}
+.page-header-container h2 {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+.reorder-albums-list .sortable-dragging {
+  opacity: 0.4;
+}
+.reorder-albums-list .sortable-placeholder {
+  height: 32px;
+  border: 1px dashed red;
+}
+
+.tracks-editor {
+  padding-top: 3px;
+}
+.tracks-editor .tracks-container {
+  padding-left: 0px;
+  padding-right: 0px;
+}
+.tracks-editor .sortable-dragging {
+  opacity: 0.4;
+}
+.tracks-editor .sortable-placeholder {
+  height: 32px;
+  border: 1px dashed red;
+}
+.tracks-editor .track-row {
+  background-color: #fff;
+  transition: background-color 100ms linear;
+  padding-top: 4px;
+  padding-bottom: 4px;
+  border-radius: 5px;
+}
+.tracks-editor .track-row:hover {
+  background-color: #f3f3f3;
+}
+.tracks-editor .track-row .btn-col {
+  padding-top: 7px;
+}
+.tracks-editor .buttons-container {
+  padding-top: 6px;
+  padding-bottom: 6px;
+}

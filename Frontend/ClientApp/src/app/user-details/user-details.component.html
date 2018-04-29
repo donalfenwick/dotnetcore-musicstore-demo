@@ -1,0 +1,40 @@
+<div class="col">
+    <div class="row page-header-row">
+        <h2>User profile</h2>
+    </div>
+</div>
+<form *ngIf="profile">
+    <div class="input-group">
+        <label for="usernameInput">Email</label>
+        <input type="text" class="form-control" name="usernameInput" [(ngModel)]="profile.username" [readonly]="true" />
+    </div>    
+    <div class="input-group">
+        <label for="firstnameInput">Firstname</label>
+        <input #firstnameInput="ngModel" required type="text" class="form-control" name="firstnameInput" [(ngModel)]="profile.firstname" />
+        <div *ngIf="firstnameInput.invalid && (firstnameInput.dirty || firstnameInput.touched)" class="alert alert-danger">
+                <div [hidden]="!firstnameInput.errors.required">Required!</div>
+        </div>
+    </div>
+    <div class="input-group">
+        <label for="surnameInput">Surname</label>
+        <input #surnameInput="ngModel"  required type="text" class="form-control" name="surnameInput" [(ngModel)]="profile.surname" />
+        <div *ngIf="surnameInput.invalid && (surnameInput.dirty || surnameInput.touched)" class="alert alert-danger">
+                <div [hidden]="!surnameInput.errors.required">Required!</div>
+        </div>
+    </div>
+    <div class="input-group">
+        <label for="phonenumberInput">Phone No</label>
+        <input #phonenumberInput="ngModel"  required type="text" class="form-control" name="phonenumberInput" [(ngModel)]="profile.phoneNumber" />
+        <div *ngIf="phonenumberInput.invalid && (phonenumberInput.dirty || phonenumberInput.touched)" class="alert alert-danger">
+                <div [hidden]="!phonenumberInput.errors.required">Required!</div>
+        </div>
+    </div>
+    <div class="input-group">
+        <label for="dateOfBirthInput">Date of birth</label>
+        <ng-datepicker  type="text" name="dateOfBirthInput" [(ngModel)]="profile.dateOfBirth"></ng-datepicker>
+        <!--<div *ngIf="dateOfBirthInput.invalid && (dateOfBirthInput.dirty || dateOfBirthInput.touched)" class="alert alert-danger">
+            <div [hidden]="!dateOfBirthInput.errors.required">Required!</div>
+        </div>-->
+    </div>
+    <button class="btn btn-primary" (click)="onUpdateProfileBtnClick()" [disabled]="savingInProgress">{{savingInProgress ? 'saving' : 'update profile'}}</button>
+</form>

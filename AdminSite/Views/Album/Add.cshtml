@@ -1,0 +1,177 @@
+﻿@model CreateAlbumViewModel
+@{
+    ViewData["Title"] = "Add album";
+}
+
+<h2>Add Album</h2>
+
+<form asp-action="Add" asp-controller="Album" enctype="multipart/form-data">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <div class="form-group row">
+        <label asp-for="@Model.Title" class=" col-md-2 col-form-label">Name</label>
+        <div class="col-md-10">
+            <input asp-for="@Model.Title" placeholder="Album title" />
+            <span asp-validation-for="@Model.Title" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="@Model.DescriptionText" class=" col-md-2 col-form-label">Description</label>
+        <div class="col-md-10">
+            <textarea asp-for="@Model.DescriptionText" placeholder="Description..." class="form-control"></textarea>
+            <span asp-validation-for="@Model.DescriptionText" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="@Model.ArtistId" class=" col-md-2 col-form-label">Artist</label>
+        <div class="col-md-10">
+            <select asp-for="@Model.ArtistId" placeholder="Artist" asp-items="Model.ArtistOptions" class="form-control"></select>
+            <span asp-validation-for="@Model.DescriptionText" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="@Model.Producer" class=" col-md-2 col-form-label">Producer</label>
+        <div class="col-md-10">
+            <input asp-for="@Model.Producer" placeholder="Producer" />
+            <span asp-validation-for="@Model.Producer" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="@Model.Label" class=" col-md-2 col-form-label">Name</label>
+        <div class="col-md-10">
+            <input asp-for="@Model.Label" placeholder="Record label" />
+            <span asp-validation-for="@Model.Label" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="@Model.ReleaseDate" class=" col-md-2 col-form-label">Release date</label>
+        <div class="col-md-10">
+            <input asp-for="@Model.ReleaseDate" placeholder="Album title" />
+            <span asp-validation-for="@Model.ReleaseDate" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label asp-for="@Model.Price" class=" col-md-2 col-form-label">Price</label>
+        <div class="col-md-10">
+            <input asp-for="@Model.Price" placeholder="Price" />
+            <span asp-validation-for="@Model.Price" class="text-danger"></span>
+        </div>
+    </div>
+
+    <div class="form-group row">
+        <label asp-for="@Model.Genres" class="col-form-label col-md-2 ">Genres</label>
+        <div class="col-md-10">
+            @for (int i = 0; i < Model.Genres.Count; i++)
+            {
+                <label class="checkbox-inline">
+                    <input type="checkbox" asp-for="@Model.Genres[i].IsSelected" class="form-check-input" />
+                    <input type="hidden" asp-for="@Model.Genres[i].Name" />
+                    <span class="control-label">@Model.Genres[i].Name</span>
+                </label>
+            }
+        </div>
+        <span asp-validation-for="@Model.Genres" class="text-danger"></span>
+    </div>
+
+    <div class="form-group row">
+        <label asp-for="@Model.Groups" class="col-form-label col-md-2 ">Groups</label>
+        <div class="col-md-10">
+            @for (int i = 0; i < Model.Groups.Count; i++)
+            {
+                <label class="checkbox-inline">
+                    <input type="checkbox" asp-for="@Model.Groups[i].IsSelected" class="form-check-input" />
+                    <input type="hidden" asp-for="@Model.Groups[i].Value" />
+                    <span class="control-label">@Model.Groups[i].Label</span>
+                </label>
+            }
+        </div>
+        <span asp-validation-for="@Model.Groups" class="text-danger"></span>
+    </div>
+
+    <div class="form-group row">
+        <label asp-for="@Model.CoverImage" class="col-md-2 col-form-label">Cover image</label>
+        <div class="col-md-10">
+            <input type="file" class="form-control" asp-for="@Model.CoverImage" style="height: auto;" />
+            <span asp-validation-for="@Model.CoverImage" class="text-danger"></span>
+        </div>
+    </div>
+    <div class="form-group row">
+        <label class="col-md-2">
+            Tracks
+        </label>
+        <div class="col-md-10">
+            <div class="tracks-editor">
+                <div class="container-fluid tracks-container">
+                    @for (int i = 0; i < Model.Tracks.Count; i++)
+                    {
+                        <div class="row track-row">
+                            <div class="col-md-6">
+                                <input type="hidden" asp-for="Tracks[i].Id" class="item-id  postback-input" />
+                                <input type="hidden" asp-for="Tracks[i].TrackNumber" class="item-index  postback-input track-number-hidden" />
+                                <div class="input-group">
+                                    <div class="input-group-addon track-no">@(i)</div>
+                                    <input type="text" asp-for="Tracks[i].Title" class="form-control postback-input item-title" placeholder="Title" />
+                                </div>
+                                <span asp-validation-for="Tracks[i].Title" class="text-danger"></span>
+                            </div>
+                            <div class="col-md-3">
+                                <input type="text" asp-for="Tracks[i].DurationInSec" class="form-control postback-input item-duration" />
+                                <span asp-validation-for="Tracks[i].DurationInSec" class="text-danger"></span>
+                            </div>
+
+                            <div class="col-md-3 btn-col">
+                                <button type="button" class="sort-button btn btn-xs btn-default" tabindex="-1">sort</button>
+                                <button type="button" class="remove-button btn btn-xs btn-danger" tabindex="-1">remove</button>
+                            </div>
+                        </div>
+
+                    }
+                </div>
+                <div class="container-fluid">
+                    <div class="row buttons-row">
+                        <button class="add-track-btn btn btn-primary" type="button">Add track</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="form-group row">
+        <div class="col-md-2"></div>
+        <div class="col-md-10">
+            <button type="submit" class="btn btn-primary">Add album</button>
+            <a asp-action="index" class="btn btn-default">Cancel</a>
+        </div>
+    </div>
+</form>
+
+
+
+<script id="album-track-item-editor-template" type="text/x-handlebars-template">
+    <div class="row track-row">
+        <div class="col-md-6">
+            <input type="hidden" class="item-id postback-input" id="Tracks{{index}}__Id" name="Tracks[{{index}}].Id" value="">
+            <input type="hidden" class="item-index postback-input track-number-hidden" data-val="true" data-val-required="The TrackNumber field is required." id="Tracks_{{index}}__TrackNumber" name="Tracks[{{index}}].TrackNumber" value="{{index}}">
+            <div class="input-group">
+                <div class="input-group-addon track-no">{{trackNo}}</div>
+                <input type="text" class="form-control item-title postback-input" placeholder="Title" data-val="true" data-val-required="The Title field is required." id="Tracks_{{index}}__Title" name="Tracks[{{index}}].Title" value="">
+            </div>
+        </div>
+        <div class="col-md-3">
+            <input type="text" class="form-control item-duration postback-input" data-val="true" data-val-required="The DurationInSec field is required." id="Tracks_{{index}}__DurationInSec" name="Tracks[{{index}}].DurationInSec" value="0">
+        </div>
+        <div class="col-md-3 btn-col">
+            <button type="button" class="sort-button btn btn-xs btn-default" tabindex="-1">sort</button>
+            <button type="button" class="remove-button btn btn-xs btn-danger" tabindex="-1">remove</button>
+        </div>
+    </div>
+</script>
+
+@section Scripts{
+
+    <script>
+        $(function(){
+            // init plugin on tracks list to enable client side adding, deleting and
+            // reordering on the list before postback
+            $('.tracks-editor').albumTracksEditorList();
+        });
+    </script>
+}

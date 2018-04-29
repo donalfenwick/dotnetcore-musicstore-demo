@@ -1,0 +1,49 @@
+﻿@model ReorderAlbumGroupViewModel
+@{
+    ViewData["Title"] = "Reorder group";
+}
+
+<h2>Reorder group @Model.GroupName</h2>
+
+
+<form asp-action="Reorder" asp-controller="AlbumGroup">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <input type="hidden" asp-for="GroupId" />
+
+    <div class="container reorder-albums-list index-list">
+        @for (int i = 0; i < Model.Items.Count; i++)
+        {
+            <div class="row reorder-row">
+                <div class="col-md-10">
+
+                    <input type="hidden" asp-for="Items[i].AlbumId" class="item-id postback-input" />
+                    <input type="hidden" asp-for="Items[i].PositionIndex" class="item-index postback-input" />
+                    <span>@Model.Items[i].AlbumTitle</span>
+
+                </div>
+                <div class="col-md-2">
+                    <button type="button" class="sort-button btn btn-xs btn-default" tabindex="-1">drag to sort</button>
+                </div>
+            </div>
+
+        }
+    </div>
+    <div class="container">
+        <div class="row buttons-row">
+            <button class="add-track-btn btn btn-primary" type="submit">Update order</button>
+            <a asp-action="index" class="btn btn-default">Cancel</a>
+        </div>
+    </div>
+</form>
+
+
+
+@section Scripts{
+
+<script>
+        $(function(){
+            // allow drag and drop sorting of the list
+            $('.reorder-albums-list').reorderPostbackList();
+        });
+</script>
+}

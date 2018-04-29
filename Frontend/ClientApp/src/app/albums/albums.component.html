@@ -1,0 +1,52 @@
+<div class="col">
+  <div class="row page-header-row">
+    <div class="pull-left">
+      <h3 class="page-heading">{{title}}</h3>
+    </div>
+    <div class="pull-right">
+      <label>
+        Filter results by genre: 
+        <select [(ngModel)]="selectedGenre" (ngModelChange)="onChangeGenreFilter($event)" >
+          <option value="">All</option>
+          <option *ngFor="let g of genres" [ngValue]="g.name"> {{g.name}} </option>
+        </select>
+      </label>
+    </div>
+  </div>
+</div>
+<div class="col">
+    <div class="row">
+      <div class="album-grid">
+        <div class="album-grid-item" *ngFor="let a of featuredAlbums">
+            <a routerLink="/albumdetails/{{a.id}}">
+          <div class="image-container" [ngStyle]="{ 'background-image': 'url('+service.apiHost+a.coverImageUrl+')'}">
+            <div class="title-panel">
+                <div class="title">{{a.title}}</div>
+                <div class="sub-heading">{{a.artistName}}</div>
+              </div>
+          </div>
+          </a>
+        </div>
+    </div>
+
+    <div class="text-center" *ngIf="numPages && numPages > 1">
+      <nav aria-label="Page navigation">
+          <ul class="pagination" >
+            <li [ngClass]="{'disabled': (pageIndex  < 1)}" (click)="onClickUpdatePage(pageIndex-1)">
+              <a routerLink="" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+              </a>
+            </li>
+            <li [ngClass]="{'active': (i-1 == pageIndex)}" *ngFor="let i of numPages|times" >
+              <a routerLink="" (click)="onClickUpdatePage(i-1)">{{i}}</a>
+            </li>
+            <li [ngClass]="{'disabled': (numPages == pageIndex+1)}" (click)="onClickUpdatePage(pageIndex+1)" >
+              <a routerLink="" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+              </a>
+            </li>
+          </ul>
+        </nav>
+      </div>
+  </div>
+</div>

@@ -1,0 +1,13 @@
+{
+  "compilerOptions": {
+    "target": "es5",
+    "noImplicitAny": true,
+    "noImplicitReturns": true,
+    "noImplicitThis": true,
+    "noEmitOnError": true,
+    "allowSyntheticDefaultImports": true,
+    "removeComments": false,
+    "sourceMap": true,
+    "strict": true
+  }
+}

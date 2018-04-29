@@ -1,0 +1,1 @@
+aspnet core 2.0 application demonstrating the server side implicit flow when using openid connect with IdentityServer4
