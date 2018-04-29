@@ -1,3 +1,6 @@
+
+[![Build Status](https://travis-ci.org/donalfenwick/dotnetcore-musicstore-demo.svg?branch=master)](https://travis-ci.org/donalfenwick/dotnetcore-musicstore-demo)
+
 # Music store application
 
 This project is a demo implementation of a music store application using aspnet core 2.0, IdentityServer 4 and Angular 5 and was undertaken to learn and gain experience in each of those technologies.
