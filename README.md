@@ -12,7 +12,7 @@ This application also hosts the applications API implemented using aspnet webapi
 - **IdentityServer**   
 Implementation of [IdentityServer4](http://docs.identityserver.io/en/release/) within an aspnet core application that is used for authenticating users via OpenIdConnect protocol and issuing JWT Bearer tokens for accessing api services in the frontend project.
   
-- **AdminServer**  
+- **AdminSite**  
 An MVC application written in aspnet core 2.0 that serves as an administration portal for managing content
 
 - **DatabaseSeeder**  
