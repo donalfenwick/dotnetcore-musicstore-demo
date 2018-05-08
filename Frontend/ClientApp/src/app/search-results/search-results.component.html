@@ -25,24 +25,7 @@
       </div>
 
       <div class="text-center" *ngIf="numPages && numPages > 1">
-          <nav aria-label="Page navigation">
-              <ul class="pagination" >
-                <li [ngClass]="{'disabled': (pageIndex < 1)}" (click)="onClickUpdatePage(pageIndex-1)">
-                  <a routerLink="" aria-label="Previous">
-                    <span aria-hidden="true">&laquo;</span>
-                  </a>
-                </li>
-                <li [ngClass]="{'active': (i-1 == pageIndex)}" *ngFor="let i of numPages|times" >
-                  <a routerLink="" (click)="onClickUpdatePage(i-1)">{{i}}</a>
-                </li>
-                <li [ngClass]="{'disabled': (numPages == pageIndex+1)}" (click)="onClickUpdatePage(pageIndex+1)" >
-                  <a routerLink="" aria-label="Next">
-                    <span aria-hidden="true">&raquo;</span>
-                  </a>
-                </li>
-              </ul>
-            </nav>
-          </div>
-
+        <app-pagination [page]="pageIndex" [numpages]="numPages" (pagechange)="onClickUpdatePage($event)"></app-pagination>
+      </div>
     </div>
   </div>

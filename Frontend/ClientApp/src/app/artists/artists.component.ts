@@ -5,8 +5,7 @@ import { Artist } from '../models/artistmodels';
 @Component({
   selector: 'app-artists',
   templateUrl: './artists.component.html',
-  styleUrls: ['./artists.component.less', './../albums/albums.component.less'],
-  providers: [MusicstoreService]
+  styleUrls: ['./artists.component.less', './../albums/albums.component.less']
 })
 export class ArtistsComponent implements OnInit {
 
@@ -29,7 +28,6 @@ export class ArtistsComponent implements OnInit {
         this.numPages = Math.floor(result.totalItems / result.pageSize) + ((result.totalItems % result.pageSize == 0) ? 0 : 1);
       });
   }
-
   onClickUpdatePage(page: number):void{
     this.loadArtists(page);
   }

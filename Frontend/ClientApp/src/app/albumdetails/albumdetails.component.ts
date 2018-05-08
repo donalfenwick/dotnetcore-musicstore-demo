@@ -1,8 +1,9 @@
-import { Component, OnInit } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MusicstoreService } from '../services/musicstore.service';
 import { ActivatedRoute } from '@angular/router';
 import { AlbumDetail, UserAlbumOwnershipStatus } from '../models/albummodels';
 import { Location } from '@angular/common';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-albumdetails',
@@ -10,19 +11,31 @@ import { Location } from '@angular/common';
   styleUrls: ['./albumdetails.component.less'],
   //providers:[MusicstoreService]
 })
-export class AlbumdetailsComponent implements OnInit {
+export class AlbumdetailsComponent implements OnInit, OnDestroy {
 
+  apiBaseUrl: string;
   album: AlbumDetail;
   ownedStatus: UserAlbumOwnershipStatus;
 
-  constructor(private service: MusicstoreService, private route: ActivatedRoute, private location: Location) { }
+  private routeSub:Subscription;
+  
+  constructor(private service: MusicstoreService, private route: ActivatedRoute, private location: Location) {
+    this.apiBaseUrl = service.baseUrl;
+   }
 
   ngOnInit() {
-    let idParam = this.route.snapshot.paramMap.get('id');
-    if(idParam){
-      let id: number = parseInt(idParam);
-      this.service.getAlbumById(id).subscribe(res => this.album = res);
-      this.service.getAlbumOwnershipStatus(id).subscribe(res => this.ownedStatus = res);
+    this.routeSub = this.route.params.subscribe( params => {
+      if(params.id){
+        let id: number = parseInt(params.id);
+        this.service.getAlbumById(id).subscribe(res => this.album = res);
+        this.service.getAlbumOwnershipStatus(id).subscribe(res => this.ownedStatus = res);
+      }
+    });
+  }
+
+  ngOnDestroy(){
+    if(this.routeSub){
+      this.routeSub.unsubscribe();
     }
   }
 

@@ -1,12 +1,12 @@
 import { UserManager } from "oidc-client";
-import { MockUserManager } from "./MockUserManager";
 
 export class AuthServiceMock{ 
     constructor(public manager: UserManager){
         
     }
+      initAuth(): Promise<any>{return new Promise((r)=>{ r(); })}
 
-    isLoggedIn(): boolean {
+      isLoggedIn(): boolean {
         return false;
       }
 

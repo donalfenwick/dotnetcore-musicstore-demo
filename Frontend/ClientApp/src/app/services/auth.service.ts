@@ -11,37 +11,53 @@ import { ConfiguredUserManager } from '../auth/ConfiguredUserManager';
 export class AuthService {
 
   user: User;
-  isAuthenticated: boolean;
+
   constructor(public manager: UserManager) {
-    this.manager.getUser().then(user => {
-      this.user = user;
-      this.isAuthenticated = this.isLoggedIn();
-    });
 
     // triggered when the auto renew access_token fails
     this.manager.events.addSilentRenewError(function(){
-      if(this){
-        this.isAuthenticated = false;
-        //this.getUser().
-      }
+
    });
    
   }
-   
+  
+  // called when the application starts up to load the user token from the local store
+  initAuth(): Promise<void>{
+    return new Promise<void>((resolveInitAuth, rejectInitAuth) => {
+      this.manager.getUser().then(user => {
+        this.user = user;
+        resolveInitAuth();
+      }, (err) => {
+        rejectInitAuth(err);
+      });
+    });
+  }
+
   isLoggedIn(): boolean {
     let result =  this.user != null && !this.user.expired;
-    this.isAuthenticated = result;
     return result;
   }
+
   getClaims(): any {
     return this.user.profile;
   }
+
   getAccessToken(): string {
-    return this.user ? this.user.access_token : "";
+    if(this.user && this.user.access_token){
+       return this.user.access_token;
+    }else{
+      return '';
+    }
   }
+
   getAuthorizationHeaderValue(): string {
-    return `${this.user ? this.user.token_type : ''} ${this.user ? this.user.access_token : ''}`;
+    if(this.user && this.user.token_type && this.user.access_token){
+      return `${this.user.token_type} ${this.user.access_token}`;
+    }else{
+      return '';
+    }
   }
+
   startAuthentication(): Promise<void> {
     return this.manager.signinRedirect();
   }
@@ -53,8 +69,6 @@ export class AuthService {
   completeAuthentication(): Promise<void> {
     return this.manager.signinRedirectCallback().then(user => {
         this.user = user;
-        this.isAuthenticated = this.isLoggedIn();
-        console.log('completeAuthentication() user:', this.user);
     });
   }
 }

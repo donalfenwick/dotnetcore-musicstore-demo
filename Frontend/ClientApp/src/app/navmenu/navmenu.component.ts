@@ -1,17 +1,19 @@
-import { Component } from '@angular/core';
-import { AuthService } from './services/auth.service';
+import { Component, OnInit } from '@angular/core';
+import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 
 @Component({
-  selector: 'app-root',
-  templateUrl: './app.component.html',
-  styleUrls: ['./app.component.css'],
-  providers: []
+  selector: 'app-navmenu',
+  templateUrl: './navmenu.component.html',
+  styleUrls: ['./navmenu.component.less']
 })
-export class AppComponent {
+export class NavmenuComponent implements OnInit {
 
-  public constructor(private authService: AuthService, private router: Router){}
-  title:string = 'app';
+  constructor(private authService: AuthService, private router: Router) { }
+
+  ngOnInit() {
+  }
+
   searchQuery: string;
 
   loginButtonOnClick():void{

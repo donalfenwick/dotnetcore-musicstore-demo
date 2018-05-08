@@ -10,14 +10,16 @@ export class AuthInterceptor implements HttpInterceptor{
 
   // apply the access token to http requests if the user is authenticated
   intercept(request: HttpRequest<any>, next: HttpHandler): Observable<HttpEvent<any>> {
-    
-    if(this.authService.isLoggedIn()){
+    const accessToken = this.authService.getAccessToken();
+    if(this.authService.isLoggedIn() && accessToken && accessToken.length > 0){
       request = request.clone({
         setHeaders: {
-          Authorization: `Bearer ${this.authService.getAccessToken()}`
+          Authorization: `Bearer ${accessToken}`
         }
       });
     }
     return next.handle(request);
   }
+
+  
 }
