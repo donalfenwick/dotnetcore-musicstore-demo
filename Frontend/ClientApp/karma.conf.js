@@ -14,6 +14,7 @@ module.exports = function (config) {
       require('karma-phantomjs-launcher')
     ],
     client:{
+      //captureConsole: true,
       clearContext: false // leave Jasmine Spec Runner output visible in browser
     },
     coverageIstanbulReporter: {
@@ -32,6 +33,12 @@ module.exports = function (config) {
       //'Chrome', 
       'PhantomJS'
     ],
-    singleRun: false
+    singleRun: false,
+    customLaunchers: {
+      ChromeDebug: {
+        base: 'Chrome',
+        flags: [ '--remote-debugging-port=9333' ]
+      }
+    }
   });
 };

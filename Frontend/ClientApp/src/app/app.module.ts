@@ -1,6 +1,6 @@
 import { BrowserModule } from '@angular/platform-browser';
-import { NgModule } from '@angular/core';
-import { FormsModule } from '@angular/forms';
+import { NgModule, APP_INITIALIZER } from '@angular/core';
+import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
 import { NgDatepickerModule } from 'ng2-datepicker';
@@ -13,7 +13,6 @@ import { ArtistsComponent } from './artists/artists.component';
 import { AuthCallbackComponent } from './auth-callback/auth-callback.component';
 import { AuthInterceptor } from './interceptors/auth.interceptor';
 import { AuthService } from './services/auth.service';
-import { AuthSilentrefreshCallbackComponent } from './auth-silentrefresh-callback/auth-silentrefresh-callback.component';
 import { UserDetailsComponent } from './user-details/user-details.component';
 import { AuthGuardService } from './guards/auth-guard.service';
 import { MusicstoreService } from './services/musicstore.service';
@@ -21,7 +20,15 @@ import { SearchResultsComponent } from './search-results/search-results.componen
 import { TimesPipe } from './pipes/times.pipe';
 import { UserManager } from 'oidc-client';
 import { ConfiguredUserManager } from './auth/ConfiguredUserManager';
+import { PaginationComponent } from './pagination/pagination.component';
+import { ApplicationRoutes } from './app.routes';
+import { NavmenuComponent } from './navmenu/navmenu.component';
+import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
+import { AppInitService } from './app-init.service';
 
+export function app_Init(initsvc: AppInitService){
+  return () => initsvc.initApp();
+}
 @NgModule({
   declarations: [
     AppComponent,
@@ -30,37 +37,29 @@ import { ConfiguredUserManager } from './auth/ConfiguredUserManager';
     FormatdurationPipe,
     ArtistsComponent,
     AuthCallbackComponent,
-    AuthSilentrefreshCallbackComponent,
     UserDetailsComponent,
     SearchResultsComponent,
-    TimesPipe
+    TimesPipe,
+    PaginationComponent,
+    NavmenuComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
     HttpClientModule,
     FormsModule,
+    ReactiveFormsModule,
     NgDatepickerModule,
-    RouterModule.forRoot([
-      { path: 'auth-callback', component: AuthCallbackComponent },
-      {path: 'auth-silentrefresh-callback', component: AuthSilentrefreshCallbackComponent },
-      { path: '', redirectTo: 'albums/FEATURED_ALBUMS', pathMatch: 'full' },
-      { path: 'albums/:groupkey', component: AlbumsComponent},
-      { path: 'artists', component: ArtistsComponent },
-      { path: 'artists/:artistid/albums', component: AlbumsComponent},
-      { path: 'albumdetails/:id', component: AlbumdetailsComponent },
-      { path: 'user/profile', component: UserDetailsComponent, canActivate: [AuthGuardService] },
-      { path: 'albums/search/:query', component: SearchResultsComponent }
-    ])
+    RouterModule.forRoot(ApplicationRoutes.routes),
+    NgbModule.forRoot(),
   ],
-  providers: [AuthService, AuthGuardService, MusicstoreService,{
-    provide: HTTP_INTERCEPTORS,
-    useClass: AuthInterceptor,
-    multi: true
-  },
-  {
-    provide: UserManager,
-    useClass: ConfiguredUserManager
-  }
+  providers: [
+    AuthService, 
+    AuthGuardService, 
+    MusicstoreService,
+    AppInitService,
+    { provide: APP_INITIALIZER, useFactory: app_Init, deps: [ AppInitService ], multi: true },
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true },
+    { provide: UserManager, useClass: ConfiguredUserManager }
   ],
   bootstrap: [AppComponent]
 })

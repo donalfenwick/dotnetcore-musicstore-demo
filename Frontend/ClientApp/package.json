@@ -9,7 +9,8 @@
     "build:ssr": "npm run build -- --app=ssr --output-hashing=media",
     "test": "ng test --single-run --browser PhantomJS",
     "lint": "ng lint",
-    "e2e": "ng e2e"
+    "e2e": "ng e2e",
+    "test-debug": "ng test --browsers ChromeDebug"
   },
   "private": true,
   "dependencies": {
@@ -23,9 +24,10 @@
     "@angular/platform-browser-dynamic": "^5.2.10",
     "@angular/platform-server": "^5.2.10",
     "@angular/router": "^5.2.10",
+    "@ng-bootstrap/ng-bootstrap": "^1.1.2",
     "@nguniversal/module-map-ngfactory-loader": "^5.0.0",
     "aspnet-prerendering": "^3.0.1",
-    "bootstrap": "^3.3.7",
+    "bootstrap": "^4.1.1",
     "core-js": "^2.5.5",
     "ng2-datepicker": "^2.2.5",
     "oidc-client": "^1.4.1",

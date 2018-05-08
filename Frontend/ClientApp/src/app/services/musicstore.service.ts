@@ -12,24 +12,15 @@ import { UserProfile } from '../models/usermodels';
 export class MusicstoreService {
 
   public apiHost:string = 'http://localhost:5600';
-  private baseUrl: string;
+  private _baseUrl: string;
+  get baseUrl():string { return this._baseUrl; }
 
   private listPageSize: number = 16;
+  get pageSize():number { return this.listPageSize; }
 
   constructor(private httpClient: HttpClient, private authService: AuthService) { 
-    this.baseUrl = `${this.apiHost}/api`;
+    this._baseUrl = `${this.apiHost}/api`;
 
-  }
-
-  private getOptions(): Object{
-
-    var options = {
-      headers:{}
-    };
-    if(this.authService.isLoggedIn()){
-      options.headers['Authorization'] = this.authService.getAuthorizationHeaderValue();
-    }
-    return options;
   }
 
   getGenres(): Observable<GenreList>{
@@ -40,7 +31,7 @@ export class MusicstoreService {
     return this.httpClient.get<ArtistList>(`${this.baseUrl}/artist`,{
       params: {
         pageSize: this.listPageSize.toString(), 
-        pageIndex: (page ? page.toString() : '0')
+        page: (page ? page.toString() : '0')
       } 
     });
   }
@@ -68,7 +59,7 @@ export class MusicstoreService {
     return this.httpClient.get<ALbumList>(`${this.baseUrl}/artist/${artistId}/albums`,{
       params: {
         pageSize: this.listPageSize.toString(), 
-        pageIndex: (page ? page.toString() : '0')
+        page: (page ? page.toString() : '0')
       } 
     });
   }
@@ -77,7 +68,7 @@ export class MusicstoreService {
     return this.httpClient.get<ALbumList>(`${this.baseUrl}/album/purchased`,{
       params: {
         pageSize: this.listPageSize.toString(), 
-        pageIndex: (page ? page.toString() : '0')
+        page: (page ? page.toString() : '0')
       } 
     });
   }
@@ -104,9 +95,5 @@ export class MusicstoreService {
 
   updateUserProfile(profile: UserProfile): Observable<UserProfile>{
     return this.httpClient.post<UserProfile>(`${this.baseUrl}/user/me/profile`, profile);
-  }
-
-  handleError(error, source$){
-    return source$;
   }
 }

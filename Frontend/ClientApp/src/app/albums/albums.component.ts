@@ -1,18 +1,19 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { MusicstoreService } from '../services/musicstore.service';
 import { Artist } from '../models/artistmodels';
 import { AlbumDetail } from '../models/albummodels';
 import { GenreDetail } from '../models/genremodels';
 import { ActivatedRoute, Router } from '@angular/router';
 import { AlbumGroupDetail } from '../models/albumgroupmodels';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-albums',
   templateUrl: './albums.component.html',
   styleUrls: ['./albums.component.less'],
-  providers: [MusicstoreService]
+  providers: []
 })
-export class AlbumsComponent {
+export class AlbumsComponent implements OnInit, OnDestroy {
 
   private title: string;
   private group: string = null;
@@ -28,37 +29,44 @@ export class AlbumsComponent {
   // filter for list
   selectedGenre: string ='';
 
+  private routeSub:Subscription;
+  
   public constructor(private service: MusicstoreService, private route: ActivatedRoute, private router: Router){
 
   }
 
   ngOnInit(){
-    //let filterGenre: string = ;
-    console.log('calling init method of home component')
-
-    this.route.params.subscribe(params => {
-      console.log(params);
+    
+    this.routeSub = this.route.params.subscribe(params => {
+      
       if (params['groupkey']) { 
         this.group = params['groupkey'];
-        this.initFromGroup(this.group, 0)
+        this.initWithGroup(this.group, 0)
       }else if(params['artistid']){
           this.artistId = parseInt(params['artistid']);
           this.initWithArtist(this.artistId, 0);
       }
     });
   }
+
+  ngOnDestroy(){
+    if(this.routeSub){
+      this.routeSub.unsubscribe();
+    }
+  }
+
   onClickUpdatePage(page: number): void{
     if(page > -1 && page < this.numPages){
       if(this.artistId != null){
         this.initWithArtist(this.artistId, page)
       }else{
-        this.initFromGroup(this.group, page);
+        this.initWithGroup(this.group, page);
       }
     }
   }
 
   // sets up the page with the supplied album group key
-  initFromGroup(key: string, page: number){
+  initWithGroup(key: string, page: number){
     
     this.service.getAlbumGroupByKey(key).subscribe(g => this.title = g .name);
     this.service.getAlbumsByGroup(key, page)
