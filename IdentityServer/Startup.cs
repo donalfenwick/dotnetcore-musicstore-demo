@@ -77,11 +77,10 @@ namespace MusicStoreDemo.IdentityServer
 
             services.AddIdentity<DbUser, DbRole>().AddEntityFrameworkStores<MusicStoreDbContext>();
 
-            
-            X509Certificate2 cert = GetSigningCredentialCert();
 
 			services.AddIdentityServer()
-					.AddSigningCredential(cert)
+					//.AddSigningCredential(GetSigningCredentialCert())
+                    .AddDeveloperSigningCredential()
 					.AddOperationalStore(options =>
 					{
 						options.ConfigureDbContext = (builder) =>
