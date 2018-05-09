@@ -51,11 +51,11 @@ Default login credentials are `username: testuser@mysite.com, password: Pa$$word
   
 ***  
   
-To start the management application (http://localhost:5604)
+To start the management application (`http://localhost:5604`)
 > `cd adminsite; dotnet run`  
     
 
 ### Running tests
 
 > `cd tests; dotnet test`  
-> `cd frontened/clientapp; ng test -sm=false`  
+> `cd frontend/clientapp; ng test -sm=false`  
