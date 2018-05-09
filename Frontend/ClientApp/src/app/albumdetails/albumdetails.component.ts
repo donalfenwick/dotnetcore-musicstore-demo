@@ -20,7 +20,7 @@ export class AlbumdetailsComponent implements OnInit, OnDestroy {
   private routeSub:Subscription;
   
   constructor(private service: MusicstoreService, private route: ActivatedRoute, private location: Location) {
-    this.apiBaseUrl = service.baseUrl;
+    this.apiBaseUrl = service.apiHost;
    }
 
   ngOnInit() {
