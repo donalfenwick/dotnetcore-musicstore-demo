@@ -15,10 +15,10 @@ import { Subscription } from 'rxjs';
 })
 export class AlbumsComponent implements OnInit, OnDestroy {
 
-  private title: string;
   private group: string = null;
   private artistId: number = null;
 
+  title: string;
   allFeaturedAlbums: AlbumDetail[];
   featuredAlbums: AlbumDetail[];
   genres: GenreDetail[];
