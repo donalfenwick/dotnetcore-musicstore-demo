@@ -88,7 +88,7 @@ namespace DatabaseSeeder
 				coverImagePath: "Images/Covers/FMacRumours.png",
 				tracks: new TrackStruct[]{
 				new TrackStruct("Second Hand News", "2:56"),
-				new TrackStruct("Dreams", "4.14"),
+				new TrackStruct("Dreams", "4:14"),
 				new TrackStruct("Never Going Back Again", "2:14"),
 				new TrackStruct("Dont Stop", "3:13"),
 				new TrackStruct("Go Your Own Way", "3:13"),
@@ -113,7 +113,7 @@ namespace DatabaseSeeder
 				coverImagePath: "Images/Covers/SoundOfSilver.jpg",
 				tracks: new TrackStruct[]{
 				new TrackStruct("Get Innocuous!", "7:11"),
-				new TrackStruct("Time to Get Away", "4.11"),
+				new TrackStruct("Time to Get Away", "4:11"),
 				new TrackStruct("North American scum", "5:25"),
 				new TrackStruct("Someone Great", "6:25"),
 				new TrackStruct("All My Friends", "7:37"),
