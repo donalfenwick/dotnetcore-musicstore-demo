@@ -1,7 +1,7 @@
 <div class="col album-details">
   <div class="row">
       
-    <div *ngIf="album">
+    <div class="album-container" *ngIf="album">
       <div class="row page-header-row">
         <div class="col-md-4">
             <img class="cover-image" src="{{apiBaseUrl + album.coverImageUrl}}" />
@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="col-md-2">
-          <button class="btn btn-default pull-right" (click)="backButtonOnClick()">Back</button>
+          <button class="btn btn-default float-right" (click)="backButtonOnClick()">Back</button>
         </div>
       </div>
       
@@ -39,7 +39,7 @@
         <h3>Tracks</h3>
         <div class="row track-row" *ngFor="let t of album.tracks">
           <div class="col-md-10 track-title"><div class="number">{{t.trackNumber}}</div> {{t.title}}</div>
-          <div class="col-md-2"><div class="pull-right">{{t.durationInSeconds | formatduration}}</div></div>
+          <div class="col-md-2"><div class="float-right">{{t.durationInSeconds | formatduration}}</div></div>
         </div>
         </div>
       </div>
