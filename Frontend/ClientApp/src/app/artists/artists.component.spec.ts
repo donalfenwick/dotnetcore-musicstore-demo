@@ -3,7 +3,7 @@ import { ArtistsComponent } from './artists.component';
 import { RouterTestingModule } from '@angular/router/testing';
 import { TimesPipe } from '../pipes/times.pipe';
 import { MusicstoreService } from '../services/musicstore.service';
-import { Observable } from 'rxjs/Observable';
+import { Observable, of } from 'rxjs';
 import { ArtistList } from '../models/artistmodels';
 import { By } from '@angular/platform-browser';
 import { PaginationComponent } from '../pagination/pagination.component';
@@ -28,7 +28,7 @@ describe('ArtistsComponent', () => {
   });
 
   it('should create', () => {
-    spyOn(service, 'getArtists').and.returnValue(Observable.of({}));
+    spyOn(service, 'getArtists').and.returnValue(of({}));
     fixture.detectChanges();
 
     expect(component).toBeTruthy();
@@ -44,7 +44,7 @@ describe('ArtistsComponent', () => {
   // });
 
   it('loadArtists function should call MusicService.getArtists function with the supplied page', () => {
-    const spy = spyOn(service, 'getArtists').and.returnValue(Observable.of({}));
+    const spy = spyOn(service, 'getArtists').and.returnValue(of({}));
     fixture.detectChanges();
 
     component.loadArtists(3);

@@ -3,7 +3,6 @@ import { NgModule, APP_INITIALIZER } from '@angular/core';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { HttpClientModule, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { RouterModule } from '@angular/router';
-import { NgDatepickerModule } from 'ng2-datepicker';
 
 import { AppComponent } from './app.component';
 import { AlbumsComponent } from './albums/albums.component';
@@ -48,7 +47,6 @@ export function app_Init(initsvc: AppInitService){
     HttpClientModule,
     FormsModule,
     ReactiveFormsModule,
-    NgDatepickerModule,
     RouterModule.forRoot(ApplicationRoutes.routes),
     NgbModule.forRoot(),
   ],

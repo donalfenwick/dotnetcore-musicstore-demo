@@ -4,7 +4,7 @@ import { MusicstoreService } from './musicstore.service';
 import { HttpClientModule, HttpClient, HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthService } from './auth.service';
 import { AuthServiceMock } from '../test/AuthServiceMock';
-import { Observable } from "rxjs/Observable";
+import { Observable } from "rxjs";
 import { ArtistList, Artist } from '../models/artistmodels';
 import { AuthInterceptor } from '../interceptors/auth.interceptor';
 import { GenreList } from '../models/genremodels';

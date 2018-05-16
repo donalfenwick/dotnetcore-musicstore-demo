@@ -1,8 +1,8 @@
 import { Injectable } from '@angular/core';
 import { UserManager, UserManagerSettings, User, OidcClient } from 'oidc-client';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/of';
-import 'rxjs/add/operator/delay';
+import { Observable } from 'rxjs';
+
+
 import { ConfiguredUserManager } from '../auth/ConfiguredUserManager';
 
 
