@@ -7,7 +7,7 @@
     "start": "ng serve",
     "build": "ng build --extract-css",
     "build:ssr": "npm run build -- --app=ssr --output-hashing=media",
-    "test": "ng test --browsers PhantomJS",
+    "test": "ng test --watch=false --browsers PhantomJS",
     "lint": "ng lint",
     "e2e": "ng e2e",
     "test-debug": "ng test --browsers ChromeDebug"
