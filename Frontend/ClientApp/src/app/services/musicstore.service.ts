@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { } from 'rxjs/add/operator/map';
+
 import { Artist, ArtistList } from './../models/artistmodels';
 import { Observable } from 'rxjs';
 import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';

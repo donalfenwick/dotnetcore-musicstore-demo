@@ -3,13 +3,13 @@
 
 # Music store application
 
-This project is a demo implementation of a music store application using aspnet core 2.0, IdentityServer 4 and Angular 5 and was undertaken to learn and gain experience in each of those technologies.
+This project is a demo implementation of a music store application using aspnet core 2.0, IdentityServer 4 and Angular 6 and was undertaken to learn and gain experience in each of those technologies.
 
 ## Applications
 This repository contains the following dotnet core applications.
 
 - **Frontend**   
-Frontend music store application implemented using Angular 5 and authenticates against [IdentityServer4](http://docs.identityserver.io/en/release/) using OpenID connect.  
+Frontend music store application implemented using [Angular 6](https://angular.io) and authenticates against [IdentityServer4](http://docs.identityserver.io/en/release/) using [OpenID connect](http://openid.net/connect/).  
 This application also hosts the applications API implemented using aspnet webapi controllers.
   
 - **IdentityServer**   

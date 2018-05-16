@@ -9,7 +9,7 @@ import { AuthServiceMock } from '../test/AuthServiceMock';
 import { AuthService } from '../services/auth.service';
 import { UserManager } from 'oidc-client';
 import { PaginationComponent } from '../pagination/pagination.component';
-import { Observable, Subject } from 'rxjs';
+import { Observable, Subject, empty, of } from 'rxjs';
 import { Params, ActivatedRoute } from '@angular/router';
 import { AlbumDetail } from '../models/albummodels';
 
@@ -76,7 +76,7 @@ describe('SearchResultsComponent', () => {
     
     fixture.detectChanges();
     
-    const spy = spyOn(TestBed.get(MusicstoreService),'searchAlbums').and.returnValue(Observable.empty());
+    const spy = spyOn(TestBed.get(MusicstoreService),'searchAlbums').and.returnValue(empty());
     component.beginSearch('testsearchterm',1)
     fixture.detectChanges();
     
@@ -87,7 +87,7 @@ describe('SearchResultsComponent', () => {
     
     fixture.detectChanges();
     const sampleResults = <AlbumDetail[]> [{id:1},{id:1},{id:1},{id:1}];
-    const spy = spyOn(TestBed.get(MusicstoreService),'searchAlbums').and.returnValue(Observable.of({
+    const spy = spyOn(TestBed.get(MusicstoreService),'searchAlbums').and.returnValue(of({
       items: sampleResults,
       pageIndex: 1,
       pageSize: 5,

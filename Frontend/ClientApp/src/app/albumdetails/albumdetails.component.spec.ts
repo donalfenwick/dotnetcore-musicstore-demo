@@ -9,8 +9,7 @@ import { HttpClient, HttpClientModule } from '@angular/common/http';
 import { AuthService } from '../services/auth.service';
 import { UserManager, User } from 'oidc-client';
 import { GenreList } from '../models/genremodels';
-import { Observable } from 'rxjs/Observable';
-import 'rxjs/add/observable/from'
+import { Observable, of } from 'rxjs';
 import { AlbumDetail } from '../models/albummodels';
 import { Location } from '@angular/common';
 import { Subject } from 'rxjs';
@@ -48,8 +47,8 @@ describe('AlbumdetailsComponent', () => {
   
   it('MusicService.getAlbumById function should be called when an ID parameter is supplied to the components route',()=>{
 
-    const spy = spyOn(TestBed.get(MusicstoreService), 'getAlbumById').and.returnValue(Observable.of(album));
-    spyOn(TestBed.get(MusicstoreService), 'getAlbumOwnershipStatus').and.returnValue(Observable.of({}));
+    const spy = spyOn(TestBed.get(MusicstoreService), 'getAlbumById').and.returnValue(of(album));
+    spyOn(TestBed.get(MusicstoreService), 'getAlbumOwnershipStatus').and.returnValue(of({}));
 
     fixture.detectChanges();
     routeParams.next({ id: 3 });    
@@ -63,7 +62,7 @@ describe('AlbumdetailsComponent', () => {
 
     component.album = album;
     component.ownedStatus = { purchaseDate: "2018-01-01", isOwned: false };
-    const spy = spyOn(TestBed.get(MusicstoreService), 'purchaseAlbumForUser').and.returnValue(Observable.of({}));
+    const spy = spyOn(TestBed.get(MusicstoreService), 'purchaseAlbumForUser').and.returnValue(of({}));
     
     component.buyAlbumButtonOnClick();
 

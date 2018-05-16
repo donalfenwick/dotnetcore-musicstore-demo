@@ -1,6 +1,5 @@
 import { FormatdurationPipe } from '../pipes/formatduration.pipe';
 import { MusicstoreService } from '../services/musicstore.service';
-import { Observable, Subject } from 'rxjs';
 import { AlbumsComponent } from './albums.component';
 import { ComponentFixture, TestBed } from '@angular/core/testing';
 import { RouterTestingModule } from '@angular/router/testing';
@@ -8,6 +7,7 @@ import { ActivatedRoute, Params } from '@angular/router';
 import { PaginationComponent } from '../pagination/pagination.component';
 import { FormsModule } from '@angular/forms';
 import { TimesPipe } from '../pipes/times.pipe';
+import { Subject, Observable, empty } from 'rxjs';
 
 
 describe('AlbumsComponent', () => {
@@ -62,9 +62,9 @@ describe('AlbumsComponent', () => {
 
   it('initWithArtist to retrieve data from service with the supplied artistID', () => {
     fixture.autoDetectChanges();
-    const getArtistByIdSpy = spyOn(TestBed.get(MusicstoreService), 'getArtistById').and.returnValue(Observable.empty());
-    const getAlbumsByArtistSpy = spyOn(TestBed.get(MusicstoreService), 'getAlbumsByArtist').and.returnValue(Observable.empty());
-    const getGenresIdSpy = spyOn(TestBed.get(MusicstoreService), 'getGenres').and.returnValue(Observable.empty());
+    const getArtistByIdSpy = spyOn(TestBed.get(MusicstoreService), 'getArtistById').and.returnValue(empty());
+    const getAlbumsByArtistSpy = spyOn(TestBed.get(MusicstoreService), 'getAlbumsByArtist').and.returnValue(empty());
+    const getGenresIdSpy = spyOn(TestBed.get(MusicstoreService), 'getGenres').and.returnValue(empty());
     
     component.initWithArtist(4, 0);
 
@@ -75,9 +75,9 @@ describe('AlbumsComponent', () => {
 
   it('initWithGroup to retrieve data from service with the supplied group key', () => {
     fixture.autoDetectChanges();
-    const getAlbumGroupByKeySpy = spyOn(TestBed.get(MusicstoreService), 'getAlbumGroupByKey').and.returnValue(Observable.empty());
-    const getAlbumsByGroupSpy = spyOn(TestBed.get(MusicstoreService), 'getAlbumsByGroup').and.returnValue(Observable.empty());
-    const getGenresIdSpy = spyOn(TestBed.get(MusicstoreService), 'getGenres').and.returnValue(Observable.empty());
+    const getAlbumGroupByKeySpy = spyOn(TestBed.get(MusicstoreService), 'getAlbumGroupByKey').and.returnValue(empty());
+    const getAlbumsByGroupSpy = spyOn(TestBed.get(MusicstoreService), 'getAlbumsByGroup').and.returnValue(empty());
+    const getGenresIdSpy = spyOn(TestBed.get(MusicstoreService), 'getGenres').and.returnValue(empty());
     
     component.initWithGroup('testGroupKey', 0);
 

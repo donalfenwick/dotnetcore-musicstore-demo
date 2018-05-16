@@ -2,16 +2,16 @@ import { async, ComponentFixture, TestBed } from '@angular/core/testing';
 
 import { UserDetailsComponent } from './user-details.component';
 import { FormsModule,ReactiveFormsModule } from '@angular/forms';
-import { NgDatepickerModule } from 'ng2-datepicker';
 import { AuthService } from '../services/auth.service';
 import { AuthServiceMock } from '../test/AuthServiceMock';
 import { MusicstoreService } from '../services/musicstore.service';
 import { UserManager } from 'oidc-client';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserProfile } from '../models/usermodels';
-import { Observable } from 'rxjs';
 import { NgbDate } from '@ng-bootstrap/ng-bootstrap/datepicker/ngb-date';
 import { By } from '@angular/platform-browser';
+import { Observable } from 'rxjs';
+import { of, empty } from 'rxjs';
 
 describe('UserDetailsComponent', () => {
   let component: UserDetailsComponent;
@@ -24,7 +24,6 @@ describe('UserDetailsComponent', () => {
       imports:[
         FormsModule,
         ReactiveFormsModule,
-        NgDatepickerModule,
         NgbModule.forRoot()
         ],
       declarations: [ UserDetailsComponent ],
@@ -46,7 +45,7 @@ describe('UserDetailsComponent', () => {
     component = fixture.componentInstance;
     
     spyOn(TestBed.get(AuthService), 'getClaims').and.returnValue({}); 
-    spyOn(TestBed.get(MusicstoreService), 'getUserProfile').and.returnValue(Observable.of(profileStub));
+    spyOn(TestBed.get(MusicstoreService), 'getUserProfile').and.returnValue(of(profileStub));
     fixture.detectChanges();
   });
 
@@ -59,7 +58,7 @@ describe('UserDetailsComponent', () => {
   });
 
   it('should set values on the profile from the form when submited', () => {
-    var spy = spyOn(TestBed.get(MusicstoreService),'updateUserProfile').and.returnValue(Observable.of({}));
+    var spy = spyOn(TestBed.get(MusicstoreService),'updateUserProfile').and.returnValue(of({}));
     component.profileForm.controls['username'].setValue('testusernmae');
     component.profileForm.controls['emailaddress'].setValue('testuser@test.com');
     component.profileForm.controls['firstname'].setValue('testfirstname');
@@ -131,7 +130,7 @@ describe('UserDetailsComponent', () => {
 
   it('submit button should be disabled between the time when the onProfileFormSubmit function is called and the MusicService.updateUserProfile observable returns a value', () => {
     spyOnProperty(component.profileForm, 'valid').and.returnValue(true);
-    var spy = spyOn(TestBed.get(MusicstoreService),'updateUserProfile').and.returnValue(Observable.empty()); // return empty to prevent calling subscribe() in the method
+    var spy = spyOn(TestBed.get(MusicstoreService),'updateUserProfile').and.returnValue(empty()); // return empty to prevent calling subscribe() in the method
     const el: HTMLButtonElement = fixture.debugElement.query(By.css('.submit-form-btn')).nativeElement;
     
     component.onProfileFormSubmit();
