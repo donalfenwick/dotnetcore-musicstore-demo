@@ -8,6 +8,7 @@ import { PaginationComponent } from '../pagination/pagination.component';
 import { FormsModule } from '@angular/forms';
 import { TimesPipe } from '../pipes/times.pipe';
 import { Subject, Observable, empty } from 'rxjs';
+import { FilterAlbumsByGenrePipe } from '../pipes/filter-albums-by-genre.pipe';
 
 
 describe('AlbumsComponent', () => {
@@ -28,7 +29,7 @@ describe('AlbumsComponent', () => {
         { provide: MusicstoreService, useValue: new MusicstoreService(null, null) }, 
         { provide: ActivatedRoute, useValue: { params: routeParams }  }
       ],
-      declarations: [ AlbumsComponent, PaginationComponent, TimesPipe ]
+      declarations: [ AlbumsComponent, PaginationComponent, TimesPipe, FilterAlbumsByGenrePipe ]
     });
 
     fixture = TestBed.createComponent(AlbumsComponent);

@@ -24,6 +24,7 @@ import { ApplicationRoutes } from './app.routes';
 import { NavmenuComponent } from './navmenu/navmenu.component';
 import {NgbModule} from '@ng-bootstrap/ng-bootstrap';
 import { AppInitService } from './app-init.service';
+import { FilterAlbumsByGenrePipe } from './pipes/filter-albums-by-genre.pipe';
 
 export function app_Init(initsvc: AppInitService){
   return () => initsvc.initApp();
@@ -40,7 +41,8 @@ export function app_Init(initsvc: AppInitService){
     SearchResultsComponent,
     TimesPipe,
     PaginationComponent,
-    NavmenuComponent
+    NavmenuComponent,
+    FilterAlbumsByGenrePipe
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
