@@ -19,7 +19,6 @@ namespace oauthtest
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://*:5607")
                 .UseStartup<Startup>()
                 .Build();
     }

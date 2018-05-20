@@ -19,7 +19,6 @@ namespace MusicStoreDemo.AdminSite
 
         public static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://*:5604")
                 .UseStartup<Startup>()
                 .Build();
     }

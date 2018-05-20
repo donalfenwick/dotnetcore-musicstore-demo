@@ -17,11 +17,10 @@ namespace MusicStoreDemo
             BuildWebHost(args).Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
-        WebHost.CreateDefaultBuilder(args)
-                //.ConfigureAppConfiguration( c => c.AddEnvironmentVariables())
-                .UseUrls("http://*:5600")
+        public static IWebHost BuildWebHost(string[] args){
+            return WebHost.CreateDefaultBuilder(args)
                 .UseStartup<Startup>()
                 .Build();
+        }
     }
 }
