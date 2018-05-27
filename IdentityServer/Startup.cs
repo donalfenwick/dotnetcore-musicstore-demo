@@ -26,6 +26,8 @@ using System.IO;
 using Microsoft.Extensions.Logging;
 using IdentityServer4.Validation;
 using DatabaseMySqlMigrations;
+using Microsoft.AspNetCore.DataProtection;
+using IdentityServer4.Services;
 
 namespace MusicStoreDemo.IdentityServer
 {
@@ -33,16 +35,18 @@ namespace MusicStoreDemo.IdentityServer
     {
         
 
-        public Startup(IConfiguration configuration, IHostingEnvironment env, ILogger<Startup> log)
+        public Startup(IConfiguration configuration, IHostingEnvironment env, ILogger<Startup> log, ILoggerFactory loggerFactory)
         {
             _log = log;
             _configuration = configuration;
             _env = env;
+            _loggerFactory = loggerFactory;
         }
 
         private readonly IConfiguration _configuration;
         private readonly IHostingEnvironment _env;
         private readonly ILogger<Startup> _log;
+        private readonly ILoggerFactory _loggerFactory;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -78,43 +82,60 @@ namespace MusicStoreDemo.IdentityServer
             services.AddIdentity<DbUser, DbRole>().AddEntityFrameworkStores<MusicStoreDbContext>();
 
 
-			services.AddIdentityServer()
-					//.AddSigningCredential(GetSigningCredentialCert())
-                    .AddDeveloperSigningCredential()
-					.AddOperationalStore(options =>
-					{
-						options.ConfigureDbContext = (builder) =>
-						{
-							if (useMySql)
-                            {
-                                builder.UseMySql(connectionString, sqlOptions =>
-												 sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-							}
-							else
-							{
-                                builder.UseSqlServer(connectionString, sqlOptions =>
-													 sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-							}
-						};
-					}).AddConfigurationStore(options =>
-					{
-						options.ConfigureDbContext = (builder) =>
-						{
-							if (useMySql)
-                            {
-                                builder.UseMySql(connectionString, sqlOptions =>
-										 sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-							}
-							else
-							{
-                                builder.UseSqlServer(connectionString, sqlOptions =>
-											 sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-							}
-						};
-					})
-					.AddAspNetIdentity<DbUser>()
-					.AddProfileService<MusicStoreDbProfileService>();
+            string certPath = Path.Combine(_env.ContentRootPath, "Certs/example.pfx");
+            FileInfo certFile = new FileInfo(certPath);
+            
+            if(certFile.Exists){
+                _log.LogInformation($"Cert found at {certPath}");
+            }else{
+                _log.LogError($"Cant load cert at {certPath}");
+            }
 
+			services.AddIdentityServer(o =>{
+                o.IssuerUri = _configuration.GetValue<string>("IdentityServerIssuerUri");
+            })
+			.AddSigningCredential(GetSigningCredentialCert())
+            //.AddDeveloperSigningCredential()
+            .AddOperationalStore(options =>
+            {
+                options.ConfigureDbContext = (builder) =>
+                {
+                    if (useMySql)
+                    {
+                        builder.UseMySql(connectionString, sqlOptions =>
+                                            sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
+                    }
+                    else
+                    {
+                        builder.UseSqlServer(connectionString, sqlOptions =>
+                                                sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
+                    }
+                };
+            }).AddConfigurationStore(options =>
+            {
+                options.ConfigureDbContext = (builder) =>
+                {
+                    if (useMySql)
+                    {
+                        builder.UseMySql(connectionString, sqlOptions =>
+                                    sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
+                    }
+                    else
+                    {
+                        builder.UseSqlServer(connectionString, sqlOptions =>
+                                        sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
+                    }
+                };
+            })
+            .AddAspNetIdentity<DbUser>()
+            .AddProfileService<MusicStoreDbProfileService>();
+
+            // if running on a linux environment dotnet doesn't know where to put the data protection keys by default
+            if(System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux)){
+                services.AddDataProtection()
+                    .SetApplicationName("musicstore-identityserver")
+                    .PersistKeysToFileSystem(new System.IO.DirectoryInfo(@"/var/dpkeys/"));
+            }
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -136,6 +157,8 @@ namespace MusicStoreDemo.IdentityServer
             app.UseIdentityServer();
 
             app.UseMvcWithDefaultRoute();
+
+            
         }
 
         private X509Certificate2 GetSigningCredentialCert(){
@@ -159,8 +182,9 @@ namespace MusicStoreDemo.IdentityServer
             // Fallback to local file for development
             if (cert == null)
             {
-                cert = new X509Certificate2(Path.Combine(_env.ContentRootPath, "certs/example.pfx"), certPassword);
-                _log.LogInformation($"Falling back to cert from file. Successfully loaded: {cert.Thumbprint}");
+                string certPath = Path.Combine(_env.ContentRootPath, "Certs/example.pfx");
+                FileInfo certFile = new FileInfo(certPath);
+                cert = new X509Certificate2(certPath, certPassword);
             }
             return cert;
         }

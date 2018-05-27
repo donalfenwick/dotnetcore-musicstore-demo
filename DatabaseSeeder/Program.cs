@@ -52,11 +52,6 @@ namespace DatabaseSeeder
         private static void ConfigureServices(IServiceCollection serviceCollection)
         {
             var configBasePath = Directory.GetCurrentDirectory();
-            // bit of a nasty hack to allow running the seeder project from the repository root 
-            if (!File.Exists(Path.Combine(configBasePath, "appsettings.json")))
-            {
-                configBasePath = Directory.GetParent(System.AppContext.BaseDirectory).Parent.Parent.Parent.FullName;
-            }
 
             // build configuration
             IConfigurationRoot configuration = new ConfigurationBuilder()

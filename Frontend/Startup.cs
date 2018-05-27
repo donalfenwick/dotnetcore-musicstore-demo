@@ -21,8 +21,11 @@ using DatabaseMySqlMigrations;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
-
-
+using Microsoft.Extensions.Logging;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using System.IdentityModel.Tokens.Jwt;
+using Microsoft.IdentityModel.Tokens;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace MusicStoreDemo
 {
@@ -30,9 +33,11 @@ namespace MusicStoreDemo
     {
         private readonly IHostingEnvironment environment;
         private readonly IConfiguration configuration;
+        private readonly ILogger<Startup> logger;
 
-        public Startup(IConfiguration configuration, IHostingEnvironment env)
+        public Startup(IConfiguration configuration, IHostingEnvironment env, ILogger<Startup> logger)
         {
+            this.logger = logger;
             this.environment = env;
             this.configuration = configuration;
         }
@@ -40,26 +45,20 @@ namespace MusicStoreDemo
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddCors(options =>
-                options.AddPolicy("defaultCorsPolicy", builder =>
-                {
-                    builder.WithOrigins("http://localhost:5600","http://localhost:5601")
-                        .AllowAnyMethod()
-                        .AllowAnyHeader()
-                        .AllowCredentials();
-                }));
             
+
             services.AddMvc();
 
             string connectionString = configuration.GetConnectionString("SqlServerConnection");
             bool useMySql = false;
-            string databaseProvider =  configuration.GetValue<string>("MusicStoreAppDatabaseProvider");
-            if(databaseProvider.Equals("MYSQL", StringComparison.InvariantCultureIgnoreCase)){
+            string databaseProvider = configuration.GetValue<string>("MusicStoreAppDatabaseProvider");
+            if (databaseProvider.Equals("MYSQL", StringComparison.InvariantCultureIgnoreCase))
+            {
                 useMySql = true;
                 connectionString = configuration.GetConnectionString("MySqlConnection");
             }
 
-            
+
 
             services.AddDbContext<MusicStoreDbContext>(builder =>
             {
@@ -71,31 +70,25 @@ namespace MusicStoreDemo
                 else
                 {
                     var appDatabaseMigrationsAssembly = typeof(MusicStoreDbContext).GetTypeInfo().Assembly.GetName().Name;
-                    
+
                     builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
                 }
             });
-            
 
-            services.AddIdentity<DbUser, DbRole>( options =>
-            {
+
+            services.AddIdentity<DbUser, DbRole>(options =>
+           {
                 // set which claims the IdentityManager<TUser> should use when doing a lookup using a user principal
                 options.ClaimsIdentity.RoleClaimType = ClaimTypes.Role;
-                options.ClaimsIdentity.UserIdClaimType = "sub";
-            }).AddEntityFrameworkStores<MusicStoreDbContext>();
+                options.ClaimsIdentity.UserIdClaimType = ClaimTypes.NameIdentifier;
+           }).AddEntityFrameworkStores<MusicStoreDbContext>();
 
+            // map the claims of type role into the user principal after authentication
+                
+            string identityServerAuthority = configuration.GetValue<string>("IdentityServerAuthorityUrl");
+            string identityServerMetadataAddress = configuration.GetValue<string>("IdentityServerMetadataAddress");
 
-            services.AddCors(options =>
-                 options.AddPolicy("defaultCorsPolicy", builder =>
-                 {
-                    builder.WithOrigins("http://localhost:5600",
-                                        "http://localhost:5602")
-                            .AllowAnyMethod()
-                            .AllowAnyHeader()
-                            .AllowCredentials();
-                 }));
-
-
+            logger.LogInformation($"Adding jwt authentication with authority: {identityServerAuthority} and metadataURL: {identityServerMetadataAddress}");
             services.AddAuthentication(options =>
             {
                 // must set default scheme when calling services.AddIdentity(...) in the 
@@ -105,31 +98,54 @@ namespace MusicStoreDemo
                 options.DefaultForbidScheme = "Bearer";
                 options.DefaultScheme = "Bearer";
             })
-                .AddIdentityServerAuthentication(options =>
+            .AddJwtBearer(options =>
+            {
+                options.RequireHttpsMetadata = false;
+                options.Authority = identityServerAuthority;
+                options.Audience = "api1";
+                options.MetadataAddress = identityServerMetadataAddress;
+                
+                options.IncludeErrorDetails = true;
+                options.TokenValidationParameters = new TokenValidationParameters() {
+                    NameClaimType = "sub",
+                    RoleClaimType = ClaimTypes.Role,
+                };
+            });
+
+            services.AddCors(options =>
+                options.AddPolicy("defaultCorsPolicy", builder =>
                 {
-                    options.Authority = "http://localhost:5601";
-                    options.RequireHttpsMetadata = false;
-
-                    options.ApiName = "api1";
-
-                    // set which claims the roles and username will be on the identity principal
-                    options.NameClaimType = ClaimTypes.NameIdentifier;
-                    options.RoleClaimType = ClaimTypes.Role;
-                });
-
+                    builder.WithOrigins(
+                        identityServerAuthority.Trim().TrimEnd('/'),
+                        "http://localhost:5600", 
+                        "http://localhost:5607"
+                        )
+                        .AllowAnyMethod()
+                        .AllowAnyHeader()
+                        .AllowCredentials();
+                }));
 
             services.AddAuthorization(options =>
             {
                 // define access policies for the api
-                options.AddPolicy("musicStoreApi.readAccess", policy => { 
-                    policy.RequireClaim("musicStoreApi.readAccessClaim", "true"); 
+                options.AddPolicy("musicStoreApi.readAccess", policy =>
+                {
+                    policy.RequireClaim("musicStoreApi.readAccessClaim", "true");
                 });
-            
-                options.AddPolicy("musicStoreApi.writeAccess", policy => { 
-                    policy.RequireClaim("musicStoreApi.readAccessClaim", "true"); 
-                    policy.RequireClaim("musicStoreApi.writeAccessClaim", "true"); 
+
+                options.AddPolicy("musicStoreApi.writeAccess", policy =>
+                {
+                    policy.RequireClaim("musicStoreApi.readAccessClaim", "true");
+                    policy.RequireClaim("musicStoreApi.writeAccessClaim", "true");
                 });
             });
+
+            // if running on a linux environment dotnet doesn't know where to put the data protection keys by default
+            if(System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux)){
+                services.AddDataProtection()
+                    .SetApplicationName("musicstore-frontend")
+                    .PersistKeysToFileSystem(new System.IO.DirectoryInfo(@"/var/dpkeys/"));
+            }
 
             services.AddTransient<ArtistMapper>();
             services.AddTransient<AlbumMapper>();
@@ -139,13 +155,13 @@ namespace MusicStoreDemo
             services.AddScoped<IAlbumRepository, AlbumRepository>();
             services.AddScoped<IAlbumGroupRepository, AlbumGroupRepository>();
             services.AddScoped<IImageRepository, ImageRepository>();
-            
+
             // add swagger to generate api documentation
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
             });
-            
+
             services.AddSpaStaticFiles(configuration =>
             {
                 configuration.RootPath = "ClientApp/dist";
@@ -164,32 +180,34 @@ namespace MusicStoreDemo
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
+            
             app.UseAuthentication();
 
             app.UseCors("defaultCorsPolicy");
-            
+
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
 
             app.UseMvc(routes =>
             {
-                
+
                 routes.MapRoute(
                     name: "default",
                     template: "{controller}/{action=Index}/{id?}");
             });
 
             // enable swagger endpoint
-            
-            app.UseSwagger(c => {
+
+            app.UseSwagger(c =>
+            {
                 // set the host property in the swagger doc so it can be 
                 // imported by external clients like postman
                 c.PreSerializeFilters.Add((swaggerDoc, httpReq) => swaggerDoc.Host = httpReq.Host.Value);
             });
             // enable swagger UI api docs to run at  ~/swagger
-            app.UseSwaggerUI(ui => {
+            app.UseSwaggerUI(ui =>
+            {
                 ui.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
             });
 
@@ -197,7 +215,7 @@ namespace MusicStoreDemo
             app.UseSpa(spa =>
             {
                 spa.Options.SourcePath = "ClientApp";
-              
+
                 if (env.IsDevelopment())
                 {
                     spa.UseAngularCliServer(npmScript: "start");
@@ -205,7 +223,7 @@ namespace MusicStoreDemo
             });
 
 
-            
+
         }
     }
 }

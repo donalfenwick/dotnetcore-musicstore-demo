@@ -23,17 +23,30 @@ using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
 using DatabaseMySqlMigrations;
+using Microsoft.Extensions.Logging;
+using Microsoft.IdentityModel.Protocols.OpenIdConnect;
+using System.Net;
+using System.Net.Http;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.IO;
+using System.Security.Cryptography.X509Certificates;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace oauthtest
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
-        {
-            _configuration = configuration;
-        }
-
+        private readonly ILogger<Startup> _logger;
         private readonly IConfiguration _configuration;
+        private readonly IHostingEnvironment _environment;
+
+        public Startup(IConfiguration configuration, IHostingEnvironment environment, ILogger<Startup> logger)
+        {
+            _logger = logger;
+            _configuration = configuration;
+            _environment = environment;
+        }
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -42,9 +55,10 @@ namespace oauthtest
             string connectionString = _configuration.GetConnectionString("SqlServerConnection");
             string appDatabaseMigrationsAssembly = typeof(MusicStoreDbContext).GetTypeInfo().Assembly.GetName().Name;
 
-            string databaseProvider =  _configuration.GetValue<string>("MusicStoreAppDatabaseProvider");
+            string databaseProvider = _configuration.GetValue<string>("MusicStoreAppDatabaseProvider");
             bool useMySql = false;
-            if(databaseProvider.Equals("MYSQL", StringComparison.InvariantCultureIgnoreCase)){
+            if (databaseProvider.Equals("MYSQL", StringComparison.InvariantCultureIgnoreCase))
+            {
                 useMySql = true;
                 appDatabaseMigrationsAssembly = typeof(MySqlMusicStoreIdentityServerDesignTimeDbContextFactory).GetTypeInfo().Assembly.GetName().Name;
                 connectionString = _configuration.GetConnectionString("MySqlConnection");
@@ -64,8 +78,11 @@ namespace oauthtest
             });
             services.AddIdentity<DbUser, DbRole>().AddEntityFrameworkStores<MusicStoreDbContext>();
 
-            //JwtSecurityTokenHandler.DefaultInboundClaimTypeMap.Clear();
+            
             string cookieSchemeName = "cookie";
+
+            string identityServerAuthority = _configuration.GetValue<string>("IdentityServerAuthorityUrl");
+            string identityServerMetadataAddress = _configuration.GetValue<string>("IdentityServerMetadataAddress");
 
             services.AddAuthentication(options =>
             {
@@ -84,8 +101,26 @@ namespace oauthtest
                 options.RequireHttpsMetadata = false;
                 options.ClientSecret = "secret";
                 // location of identity server
-                options.Authority = "http://localhost:5601/";
-
+                options.Authority = identityServerAuthority;
+                options.MetadataAddress = identityServerMetadataAddress;
+                
+                
+                if (_environment.EnvironmentName == "localdocker")
+                {
+                    string certPassword = "SecretPassword123";
+                    string certPath = Path.Combine(_environment.ContentRootPath, "Certs/example.pfx");
+                    X509Certificate2 cert = new X509Certificate2(certPath, certPassword);
+        
+                    options.TokenValidationParameters = new TokenValidationParameters{
+                        ValidateIssuerSigningKey = true,
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        IssuerSigningKey = new X509SecurityKey(cert),
+                        IssuerSigningKeyResolver = (string token, SecurityToken securityToken, string kid, TokenValidationParameters validationParameters) => new List<X509SecurityKey> { new X509SecurityKey(cert) }
+    
+                    };
+                }
                 // request the id_token (jwt with users identity claims) and the code, which is used in a 
                 // backend request to identity server to get the JWT access_token.
                 options.ResponseType = "code id_token";
@@ -124,12 +159,19 @@ namespace oauthtest
                             }
                             var id = context.Principal.Identity as ClaimsIdentity;
                             id.AddClaims(claims);
-                            
+
                         }
                         return Task.FromResult(0);
                     }
                 };
             });
+
+            // if running on a linux environment dotnet doesn't know where to put the data protection keys by default
+            if(System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux)){
+                services.AddDataProtection()
+                    .SetApplicationName("musicstore-oauthtest")
+                    .PersistKeysToFileSystem(new System.IO.DirectoryInfo(@"/var/dpkeys/"));
+            }
 
             services.AddMvc();
         }

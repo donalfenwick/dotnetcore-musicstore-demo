@@ -116,7 +116,23 @@ namespace DatabaseSeeder
             
             if (!_identityServerConfigContext.Clients.Any())
             {
-                foreach (var client in IdentityServerClients.GetClients())
+                IdentityServerConfigUrls urls = new IdentityServerConfigUrls(){
+                    AngularAppClientUri = "http://localhost:5600",
+                    MvcClientUri = "http://localhost:5607"
+                };
+
+                string angularClientUrl = this._configuration.GetValue<string>("AngularAppClientUrl");
+                if(!string.IsNullOrWhiteSpace(angularClientUrl)){
+                    urls.AngularAppClientUri = angularClientUrl;
+                }
+
+                // set url for the server side mvc app "/samples/oauthtest"
+                string mvcAppClientUrl = this._configuration.GetValue<string>("MvcAppClientUrl");
+                if(!string.IsNullOrWhiteSpace(mvcAppClientUrl)){
+                    urls.MvcClientUri = mvcAppClientUrl;
+                }
+
+                foreach (var client in IdentityServerClients.GetClients(urls))
                 {
                     _identityServerConfigContext.Clients.Add(client.ToEntity());
                 }

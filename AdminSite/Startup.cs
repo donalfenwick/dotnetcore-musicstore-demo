@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
@@ -18,17 +19,20 @@ using MusicStoreDemo.Common.Repositories;
 using MusicStoreDemo.Common.Mappers;
 using MusicStoreDemo.Common;
 using DatabaseMySqlMigrations;
+using Microsoft.AspNetCore.DataProtection;
 
 namespace MusicStoreDemo.AdminSite
 {
     public class Startup
     {
-        public Startup(IConfiguration configuration)
+        public Startup(IConfiguration configuration, IHostingEnvironment env)
         {
             _configuration = configuration;
+            _env = env;
         }
 
         private readonly IConfiguration _configuration;
+        private readonly IHostingEnvironment _env;
 
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
@@ -73,6 +77,14 @@ namespace MusicStoreDemo.AdminSite
             services.AddScoped<IAlbumRepository, AlbumRepository>();
             services.AddScoped<IAlbumGroupRepository, AlbumGroupRepository>();
             services.AddScoped<IImageRepository, ImageRepository>();
+
+
+            // if running on a linux environment dotnet doesn't know where to put the data protection keys by default
+            if(System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux)){
+                services.AddDataProtection()
+                    .SetApplicationName("musicstore-adminsite")
+                    .PersistKeysToFileSystem(new System.IO.DirectoryInfo(@"/var/dpkeys/"));
+            }
 
             services.AddMvc()
                 .AddCookieTempDataProvider();

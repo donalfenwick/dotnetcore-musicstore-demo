@@ -4,5 +4,8 @@
 // The list of which env maps to which file can be found in `.angular-cli.json`.
 
 export const environment = {
-  production: false
+  production: false,
+  envName: 'Dev',
+  identotyServerAuthority: 'http://localhost:5601/',
+  siteBasePath: 'http://localhost:5600/',
 };
