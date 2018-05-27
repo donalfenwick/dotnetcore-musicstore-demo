@@ -15,7 +15,7 @@ pipelines:
           caches:
             - dotnetcore
           script: 
-            - export PROJECT_NAME=Frontend/MusicStoreDemo.csproj
+            - export PROJECT_NAME=src/Frontend/MusicStoreDemo.csproj
             - export TEST_NAME=Tests/MusicStoreDemo.Tests.csproj
             - dotnet restore
             - dotnet build $PROJECT_NAME

@@ -4,11 +4,11 @@ services:
   musicstore-sharedlibs:
     image: musicstore-sharedlibs
     build: 
-      context: ./Shared
+      context: ./src/Shared
   frontend-site:
     image: musicstore-frontend
     build: 
-      context: ./Frontend
+      context: ./src/Frontend
     ports:
       - 5600:80
     depends_on:
@@ -21,7 +21,7 @@ services:
   oauthapp:
     image: musicstore-oauthapp
     build: 
-      context: ./samples/oauthtest
+      context: ./src/samples/oauthtest
     ports:
       - 5607:80
     depends_on:
@@ -34,7 +34,7 @@ services:
   identityserver:
     image: musicstore-identityserver
     build: 
-      context: ./IdentityServer
+      context: ./src/IdentityServer
     ports:
       - 5601:80
     depends_on:
@@ -47,7 +47,7 @@ services:
   adminsite:
     image: musicstore-adminsite
     build: 
-      context: ./AdminSite
+      context: ./src/AdminSite
     ports:
       - 5604:80
     depends_on:
@@ -60,7 +60,7 @@ services:
   db-seeder:
     image: musicstore-db-seeder
     build: 
-      context: ./DatabaseSeeder
+      context: ./src/DatabaseSeeder
     depends_on:
       - musicstore-sharedlibs
       - db
