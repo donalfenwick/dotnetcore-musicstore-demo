@@ -20,12 +20,8 @@
     <Folder Include="Api\Repositories\Helpers\" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Frontend\MusicStoreDemo.csproj" />
-    <ProjectReference Include="..\Database\MusicStoreDemo.Database.csproj" />
-    <ProjectReference Include="..\Common\MusicStoreDemo.Common.csproj" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Api\Controllers\ArtistController_Create %28copy%29.cs" />
-    <Compile Remove="Api\Routing\RouteTests.cs" />
+    <ProjectReference Include="..\src\Frontend\MusicStoreDemo.csproj" />
+    <ProjectReference Include="..\src\Database\MusicStoreDemo.Database.csproj" />
+    <ProjectReference Include="..\src\Common\MusicStoreDemo.Common.csproj" />
   </ItemGroup>
 </Project>
