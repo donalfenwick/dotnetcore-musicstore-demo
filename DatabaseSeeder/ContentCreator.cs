@@ -236,7 +236,7 @@ namespace DatabaseSeeder
                 label: "Epic",
                 releaseDate: new DateTime(1991, 8, 27),
                 price: 9.99,
-                coverImagePath: "Images/Covers/pjten.jpg",
+                coverImagePath: "Images/Covers/pjTen.jpg",
                 tracks: new TrackStruct[]{
     				new TrackStruct("Once", "3:51"),
                     new TrackStruct("Even Flow", "4:53"),

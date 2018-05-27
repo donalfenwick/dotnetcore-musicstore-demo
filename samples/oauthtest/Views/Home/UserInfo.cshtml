@@ -37,42 +37,42 @@
     <button id="testGetGenresButton">Test authenticated request to api</button>
 
     <div id="testGetGenresOutput"></div>
+    @section Scripts{
+        <script>
+            var bearerToken = '@(ViewBag.accessToken)';
+            $(function(){
 
-    <script>
-        var bearerToken = '@(ViewBag.accessToken)';
-        $(function(){
+                $('#testGetGenresButton').click(requestGenreList);
 
-            $('#testGetGenresButton').click(requestGenreList);
+                function requestGenreList(){
+                    $.ajax({
+                        url: "http://localhost:5600/api/genre",
+                        method: "GET",
+                        dataType: "json",
+                        crossDomain: true,
+                        contentType: "application/json; charset=utf-8",
+                        cache: false,
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader("Authorization", "Bearer " + bearerToken);
+                        }
+                    })
+                    .done(function(data) {
+                        console.log('success', data);
+                        var html = '<h3>Results from genre list api call</h3><ul>';
+                        for(var i = 0; i < data.genres.length; i++){
+                            html+= '<li>'+data.genres[i].name+'</li>';
+                        }
+                        html+='</li>';
 
-            function requestGenreList(){
-                $.ajax({
-                    url: "http://localhost:5602/api/genre",
-                    method: "GET",
-                    dataType: "json",
-                    crossDomain: true,
-                    contentType: "application/json; charset=utf-8",
-                    cache: false,
-                    beforeSend: function (xhr) {
-                        xhr.setRequestHeader("Authorization", "Bearer " + bearerToken);
-                    }
-                  })
-                  .done(function(data) {
-                    console.log('success', data);
-                    var html = '<h3>Results</h3><ul>';
-                    for(var i = 0; i < data.genres.length; i++){
-                        html+= '<li>'+data.genres[i]+'</li>';
-                    }
-                    html+='</li>';
-
-                    $('#testGetGenresOutput').html(html);
-                  })
-                  .fail(function(xhr) {
-                    console.log('error', xhr);
-                  });
-            }
-        });
-    </script>
-
+                        $('#testGetGenresOutput').html(html);
+                    })
+                    .fail(function(xhr) {
+                        console.log('error', xhr);
+                    });
+                }
+            });
+        </script>
+    }
 }
 else
 {

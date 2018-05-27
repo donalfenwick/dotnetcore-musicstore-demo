@@ -20,8 +20,11 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\DatabaseMySqlMigrations\DatabaseMySqlMigrations.csproj" />
-    <ProjectReference Include="..\..\Database\MusicStoreDemo.Database.csproj" />
-    <ProjectReference Include="..\..\Common\MusicStoreDemo.Common.csproj" />
+    <ProjectReference Include="..\..\Shared\DatabaseMySqlMigrations\DatabaseMySqlMigrations.csproj" />
+    <ProjectReference Include="..\..\Shared\Database\MusicStoreDemo.Database.csproj" />
+    <ProjectReference Include="..\..\Shared\Common\MusicStoreDemo.Common.csproj" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Certs\**\*" CopyToPublishDirectory="Always" />
   </ItemGroup>
 </Project>

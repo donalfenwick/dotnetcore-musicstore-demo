@@ -90,7 +90,7 @@ export class AlbumsComponent implements OnInit, OnDestroy {
       .subscribe(result =>{
         this.allFeaturedAlbums = result.items;
         this.featuredAlbums = this.allFeaturedAlbums;
-        this.numPages = (result.totalItems / result.pageSize) + ((result.totalItems % result.pageSize == 0) ? 0 : 1);
+        this.numPages = Math.floor(result.totalItems / result.pageSize) + ((result.totalItems % result.pageSize == 0) ? 0 : 1);
         this.pageIndex = result.pageIndex;
       });
 

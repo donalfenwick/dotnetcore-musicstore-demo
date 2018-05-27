@@ -8,10 +8,11 @@ import { GenreList } from '../models/genremodels';
 import { AlbumGroupDetail } from '../models/albumgroupmodels';
 import { AuthService } from './auth.service';
 import { UserProfile } from '../models/usermodels';
+import { PlatformLocation } from '@angular/common';
 @Injectable()
 export class MusicstoreService {
 
-  public apiHost:string = 'http://localhost:5600';
+  public apiHost:string = '';
   private _baseUrl: string;
   get baseUrl():string { return this._baseUrl; }
 
@@ -20,7 +21,6 @@ export class MusicstoreService {
 
   constructor(private httpClient: HttpClient, private authService: AuthService) { 
     this._baseUrl = `${this.apiHost}/api`;
-
   }
 
   getGenres(): Observable<GenreList>{

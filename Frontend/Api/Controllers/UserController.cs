@@ -91,18 +91,28 @@ namespace MusicStoreDemo.Api.Controllers
         }
 
         [HttpGet("identity")]
-        public IActionResult Get(int id)
+        public async Task<IActionResult> Get(int id)
         {
             // TODO: this is used for testing introspection with the identity system during dev, remove it later.
             UserIdentity model = new UserIdentity();
             var isAdminRole = User.IsInRole("AdminUser");
             var isTestRole = User.IsInRole("TestUser");
+            
             if (User.Identity.IsAuthenticated)
             {
-                //    DbUser dbUser = await _userManager.GetUserAsync(User);
-                //    IList<string> roles = await _userManager.GetRolesAsync(dbUser);
-                //    model.UserName = User.Identity.Name;
-                //    model.Roles.AddRange(roles);
+                if(User.Identity is ClaimsIdentity){
+                    ClaimsIdentity claimsIdt = (ClaimsIdentity)User.Identity;
+                    model.RolesInClaims = claimsIdt.Claims.Where(c => c.Type == ClaimTypes.Role).Select(c => c.Value).ToList();
+                }
+                DbUser dbUser = await _userManager.GetUserAsync(User);
+                model.UserName = User.Identity.Name;
+                if(dbUser != null){
+                    model.UserName = dbUser.UserName;
+                    model.UserId = dbUser.Id;
+                    model.FoundDbUser = true;
+                    IList<string> dbRoles = await _userManager.GetRolesAsync(dbUser);
+                    model.DbRoles.AddRange(dbRoles);
+                }
                 model.Claims = User.Claims.Select(x => new UserClaim
                 {
                     Type = x.Type,

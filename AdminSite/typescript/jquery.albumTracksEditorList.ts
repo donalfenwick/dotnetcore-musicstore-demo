@@ -1,6 +1,5 @@
-import { templates } from "handlebars";
 
-"use strict";
+
 
 // add type definition for the sortable plugin
 declare function sortable(a: HTMLElement, options?:any): Element[];

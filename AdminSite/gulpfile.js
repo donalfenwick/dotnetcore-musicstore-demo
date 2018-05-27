@@ -36,6 +36,8 @@ gulp.task('less', function () {
 
 gulp.task('default', ['copyNpmLibs','less', 'compile-typescript', 'watch']);
 
+gulp.task('default-ci', ['copyNpmLibs','less', 'compile-typescript']);
+
 gulp.task('watch', function () {
     gulp.watch('less/**/*.less', ['less']);
     gulp.watch('typescript/**/*.ts', ['compile-typescript']);

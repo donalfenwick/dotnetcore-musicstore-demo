@@ -22,9 +22,9 @@
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="2.0.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\DatabaseMySqlMigrations\DatabaseMySqlMigrations.csproj" />
-    <ProjectReference Include="..\Database\MusicStoreDemo.Database.csproj" />
-    <ProjectReference Include="..\Common\MusicStoreDemo.Common.csproj" />
+    <ProjectReference Include="..\Shared\DatabaseMySqlMigrations\DatabaseMySqlMigrations.csproj" />
+    <ProjectReference Include="..\Shared\Database\MusicStoreDemo.Database.csproj" />
+    <ProjectReference Include="..\Shared\Common\MusicStoreDemo.Common.csproj" />
   </ItemGroup>
 
   <ItemGroup>
@@ -34,39 +34,10 @@
   </ItemGroup>
 
   <ItemGroup>
-    <None Update="Images\Covers\afFuneral.jpg">
+    <None Update="appsettings.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </None>
-    <None Update="Images\Covers\beckguero.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\Covers\Beck_ModernGuilt.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\Covers\FMacRumours.png">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\Covers\gc-ltais.jpeg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\Covers\itsblitz.jpeg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\Covers\Pixies-Doolittle.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\Covers\pjTen.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\Covers\skybluesky.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\Covers\SoundOfSilver.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
-    <None Update="Images\Covers\yankeehotelfoxtrot.jpg">
-      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
-    </None>
+    <None Include="Images\**\*" CopyToPublishDirectory="Always" />
   </ItemGroup>
   <PropertyGroup>
     <OutputType>Exe</OutputType>

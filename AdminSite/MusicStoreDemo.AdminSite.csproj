@@ -27,9 +27,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Common\MusicStoreDemo.Common.csproj" />
-    <ProjectReference Include="..\DatabaseMySqlMigrations\DatabaseMySqlMigrations.csproj" />
-    <ProjectReference Include="..\Database\MusicStoreDemo.Database.csproj" />
+    <ProjectReference Include="..\Shared\Common\MusicStoreDemo.Common.csproj" />
+    <ProjectReference Include="..\Shared\DatabaseMySqlMigrations\DatabaseMySqlMigrations.csproj" />
+    <ProjectReference Include="..\Shared\Database\MusicStoreDemo.Database.csproj" />
   </ItemGroup>
 
   <ItemGroup>
