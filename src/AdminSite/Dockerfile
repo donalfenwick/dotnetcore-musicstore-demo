@@ -7,7 +7,7 @@ WORKDIR /app
 COPY ./*.csproj ./package.json ./
 RUN dotnet restore \
     && npm install gulp-cli -g  \
-    && npm install 
+    && npm install --no-audit
 
 # Copy everything else and build
 COPY ./ ./
