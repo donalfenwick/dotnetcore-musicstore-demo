@@ -33,4 +33,4 @@ Application to create the required databases and populate them with initial data
 ### Running tests
 
 > `cd tests; dotnet test`  
-> `cd frontend/clientapp; ng test -sm=false`  
+> `cd src/frontend/clientapp; ng test`  
