@@ -19,7 +19,6 @@ export class AlbumsComponent implements OnInit, OnDestroy {
   private artistId: number = null;
 
   title: string;
-  allFeaturedAlbums: AlbumDetail[];
   featuredAlbums: AlbumDetail[];
   genres: GenreDetail[];
   pageIndex: number = 0;
@@ -71,8 +70,7 @@ export class AlbumsComponent implements OnInit, OnDestroy {
     this.service.getAlbumGroupByKey(key).subscribe(g => this.title = g .name);
     this.service.getAlbumsByGroup(key, page)
       .subscribe(result =>{
-        this.allFeaturedAlbums = result.items;
-        this.featuredAlbums = this.allFeaturedAlbums;
+        this.featuredAlbums = result.items;
         this.numPages = Math.floor(result.totalItems / result.pageSize) + ((result.totalItems % result.pageSize == 0) ? 0 : 1);
         this.pageIndex = result.pageIndex;
       });
@@ -88,8 +86,7 @@ export class AlbumsComponent implements OnInit, OnDestroy {
     this.service.getArtistById(artistId).subscribe(g => this.title = 'Albums by ' + g.name);
     this.service.getAlbumsByArtist(artistId, page)
       .subscribe(result =>{
-        this.allFeaturedAlbums = result.items;
-        this.featuredAlbums = this.allFeaturedAlbums;
+        this.featuredAlbums = result.items;
         this.numPages = Math.floor(result.totalItems / result.pageSize) + ((result.totalItems % result.pageSize == 0) ? 0 : 1);
         this.pageIndex = result.pageIndex;
       });
@@ -99,15 +96,5 @@ export class AlbumsComponent implements OnInit, OnDestroy {
       this.genres = result.genres.filter( g => g.totalAlbums > 0);
     });
     
-  }
-
-  onChangeGenreFilter(genre: string): void{
-    if(genre){
-      this.featuredAlbums = this.allFeaturedAlbums.filter(x => x.genres.indexOf(genre) != -1 );
-    }else{
-      this.featuredAlbums = this.allFeaturedAlbums;
-    }
-  }
-
-  
+  }  
 }
