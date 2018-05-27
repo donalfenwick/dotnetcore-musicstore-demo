@@ -6,5 +6,5 @@ script:
   - dotnet build ./src/Frontend/
   - dotnet build ./src/IdentityServer/
   - dotnet build ./src/AdminSite/
-  - dotnet test  ./src/Tests/
+  - dotnet test  ./Tests/
   - cd src/Frontend/ClientApp && npm test
