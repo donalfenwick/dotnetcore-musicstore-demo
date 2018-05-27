@@ -7,7 +7,7 @@
       <div class="float-right">
         <label>
           Filter results by genre: 
-          <select [(ngModel)]="selectedGenre" (ngModelChange)="onChangeGenreFilter($event)" >
+          <select [(ngModel)]="selectedGenre">
             <option value="">All</option>
             <option *ngFor="let g of genres" [ngValue]="g.name"> {{g.name}} </option>
           </select>
@@ -18,7 +18,7 @@
 <div class="col">
     <div class="row">
       <div class="album-grid">
-        <div class="album-grid-item" *ngFor="let a of featuredAlbums">
+        <div class="album-grid-item" *ngFor="let a of featuredAlbums | filterAlbumsByGenre:selectedGenre">
             <a routerLink="/albumdetails/{{a.id}}">
           <div class="image-container" [ngStyle]="{ 'background-image': 'url('+service.apiHost+a.coverImageUrl+')'}">
             <div class="title-panel">
