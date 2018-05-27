@@ -29,8 +29,8 @@ Default login credentials are `username: testuser@mysite.com, password: Pa$$word
   
 ***  
   
-To start and run the management application (`http://localhost:5604`)
-`cd src/adminsite`
-`npm install` (requires node)
-`gulp` (requires gulp cli)
+To start and run the management application (`http://localhost:5604`)  
+`cd src/adminsite`  
+`npm install` (requires node)  
+`gulp` (requires gulp cli)  
 `dotnet run`  
