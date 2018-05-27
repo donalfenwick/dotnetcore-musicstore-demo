@@ -52,7 +52,7 @@ namespace MusicStoreDemo.IdentityServer
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddMvc();
-
+        
             // setup tutorial https://www.scottbrady91.com/Identity-Server/Getting-Started-with-IdentityServer-4
 
             // default to using sqlserver and enable MusicStoreAppDatabaseProvider=MYSQL is set as an env varible or in the config file
@@ -82,20 +82,10 @@ namespace MusicStoreDemo.IdentityServer
             services.AddIdentity<DbUser, DbRole>().AddEntityFrameworkStores<MusicStoreDbContext>();
 
 
-            string certPath = Path.Combine(_env.ContentRootPath, "Certs/example.pfx");
-            FileInfo certFile = new FileInfo(certPath);
-            
-            if(certFile.Exists){
-                _log.LogInformation($"Cert found at {certPath}");
-            }else{
-                _log.LogError($"Cant load cert at {certPath}");
-            }
-
 			services.AddIdentityServer(o =>{
                 o.IssuerUri = _configuration.GetValue<string>("IdentityServerIssuerUri");
             })
 			.AddSigningCredential(GetSigningCredentialCert())
-            //.AddDeveloperSigningCredential()
             .AddOperationalStore(options =>
             {
                 options.ConfigureDbContext = (builder) =>
@@ -163,26 +153,12 @@ namespace MusicStoreDemo.IdentityServer
 
         private X509Certificate2 GetSigningCredentialCert(){
             X509Certificate2 cert = null;
-            /*using (X509Store certStore = new X509Store(StoreName.My, StoreLocation.CurrentUser))
-            {
-                certStore.Open(OpenFlags.ReadOnly);
-                X509Certificate2Collection certCollection = certStore.Certificates.Find(
-                    X509FindType.FindByThumbprint,
-                    // Replace below with your cert's thumbprint
-                    "CB781679561914B7539BE120EE9C4F6780579A86",
-                    false);
-                // Get the first cert with the thumbprint
-                if (certCollection.Count > 0)
-                {
-                    cert = certCollection[0];
-                    _log.LogInformation($"Successfully loaded cert from registry: {cert.Thumbprint}");
-                }
-            }*/
             string certPassword = "SecretPassword123";
             // Fallback to local file for development
             if (cert == null)
             {
                 string certPath = Path.Combine(_env.ContentRootPath, "Certs/example.pfx");
+                _log.LogInformation($"GetSigningCredentialCert - Loadcert {certPath}");
                 FileInfo certFile = new FileInfo(certPath);
                 cert = new X509Certificate2(certPath, certPassword);
             }
