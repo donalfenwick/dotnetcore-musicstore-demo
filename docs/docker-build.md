@@ -25,3 +25,5 @@ frontend - `http://localhost:5600/`
 admin app - `http://localhost:5604/`  
 identity server - `http://localhost:5601/`  
 oauth test - `http://localhost:5607/` (test implementation of a server side implicit grant login with IdentityServer4)  
+  
+Default login credentials are username: **testuser@mysite.com**, password: **Pa$$word1**  
