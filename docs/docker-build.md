@@ -1,4 +1,4 @@
-# Build with dotnet cli  
+# Build with docker-compose
 Follow the instructions below to build the application with docker.  
 Note: This requires that you first have docker installed on your OS.
 
