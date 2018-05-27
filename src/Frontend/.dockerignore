@@ -1,0 +1,16 @@
+ClientApp/node_modules
+ClientApp/coverage
+ClientApp/dist
+.DS_Store
+node_modules
+bin
+obj
+npm-debug.log
+Dockerfile*
+docker-compose*
+.dockerignore
+.git
+.gitignore
+README.md
+LICENSE
+.vscode

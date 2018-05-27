@@ -1,0 +1,76 @@
+version: '3'
+
+services:
+  musicstore-sharedlibs:
+    image: musicstore-sharedlibs
+    build: 
+      context: ./src/Shared
+  frontend-site:
+    image: musicstore-frontend
+    build: 
+      context: ./src/Frontend
+    ports:
+      - 5600:80
+    depends_on:
+      - musicstore-sharedlibs
+      - db
+      - db-seeder
+    environment:
+      ConnectionStrings:SqlServerConnection: ${DOCKER_CONNECTIONSTRING}
+      ASPNETCORE_ENVIRONMENT: localdocker
+  oauthapp:
+    image: musicstore-oauthapp
+    build: 
+      context: ./src/samples/oauthtest
+    ports:
+      - 5607:80
+    depends_on:
+      - musicstore-sharedlibs
+      - db
+      - db-seeder
+    environment:
+      ConnectionStrings:SqlServerConnection: ${DOCKER_CONNECTIONSTRING}
+      ASPNETCORE_ENVIRONMENT: localdocker
+  identityserver:
+    image: musicstore-identityserver
+    build: 
+      context: ./src/IdentityServer
+    ports:
+      - 5601:80
+    depends_on:
+      - musicstore-sharedlibs
+      - db
+      - db-seeder
+    environment:
+      ConnectionStrings:SqlServerConnection: ${DOCKER_CONNECTIONSTRING}
+      ASPNETCORE_ENVIRONMENT: localdocker
+  adminsite:
+    image: musicstore-adminsite
+    build: 
+      context: ./src/AdminSite
+    ports:
+      - 5604:80
+    depends_on:
+      - musicstore-sharedlibs
+      - db
+      - db-seeder
+    environment:
+      ConnectionStrings:SqlServerConnection: ${DOCKER_CONNECTIONSTRING}
+      ASPNETCORE_ENVIRONMENT: localdocker
+  db-seeder:
+    image: musicstore-db-seeder
+    build: 
+      context: ./src/DatabaseSeeder
+    depends_on:
+      - musicstore-sharedlibs
+      - db
+    environment:
+      ConnectionStrings:SqlServerConnection: ${DOCKER_CONNECTIONSTRING}
+      ASPNETCORE_ENVIRONMENT: localdocker
+      AngularAppClientUrl: http://localhost:5600
+      MvcAppClientUrl: http://localhost:5607
+  db:
+    image: "microsoft/mssql-server-linux"
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"

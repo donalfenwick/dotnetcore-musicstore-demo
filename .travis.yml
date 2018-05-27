@@ -3,8 +3,8 @@ mono: none
 dotnet: 2.0.0
 script:
   - dotnet restore
-  - dotnet build ./Frontend/
-  - dotnet build ./IdentityServer/
-  - dotnet build ./AdminSite/
-  - dotnet test ./Tests/
-  - cd Frontend/ClientApp && npm test
+  - dotnet build ./src/Frontend/
+  - dotnet build ./src/IdentityServer/
+  - dotnet build ./src/AdminSite/
+  - dotnet test  ./Tests/
+  - cd src/Frontend/ClientApp && npm test

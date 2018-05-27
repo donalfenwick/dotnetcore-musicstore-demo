@@ -42,17 +42,17 @@ Execute the following commands to run the `DatabaseSeeder` console app to create
 
 
 Start the frontend application (`http://localhost:5600`)
-> `cd frontend; dotnet run`  
+> `cd src/frontend; dotnet run`  
 
 Start the identity server web app (`http://localhost:5601`)
-> `cd IdentityServer; dotnet run`  
+> `cd src/IdentityServer; dotnet run`  
 
 Default login credentials are `username: testuser@mysite.com, password: Pa$$word1`.   
   
 ***  
   
 To start the management application (`http://localhost:5604`)
-> `cd adminsite; dotnet run`  
+> `cd src/adminsite; dotnet run`  
     
 
 ### Running tests
