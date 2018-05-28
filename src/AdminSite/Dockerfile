@@ -4,7 +4,7 @@ FROM musicstore-sharedlibs AS build-env
 # start building app
 WORKDIR /app
 # Copy csproj and restore as distinct layers
-COPY ./*.csproj ./package.json ./
+COPY ./*.csproj ./package.json ./package-lock.json ./
 RUN dotnet restore \
     && npm install gulp-cli -g  \
     && npm install --no-audit

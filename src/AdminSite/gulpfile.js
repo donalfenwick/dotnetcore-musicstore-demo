@@ -10,7 +10,7 @@ var tsProject = ts.createProject('./tsconfig.json');
 
 //copy all non-dev NPM libs to the wwwroot  
 gulp.task("copyNpmLibs", function () {
-    gulp.src(npmDist(), {base:'./node_modules/'})
+    return gulp.src(npmDist(), {base:'./node_modules/'})
         .pipe(rename(function(path) {
             path.dirname = path.dirname.replace(/\/dist/, '').replace(/\\dist/, '');
         }))
@@ -18,27 +18,28 @@ gulp.task("copyNpmLibs", function () {
 });
 
 gulp.task('less', function () {
-    gulp.src(['./less/**/*.less'])
-        .pipe(less())
-        .pipe(concat('site-styles.css'))
-        .on('error', function (err) {
-            console.log(err.toString());
-            this.emit('end');
-        })
-        .pipe(gulp.dest('./wwwroot/css'));
-    });
-    
-    gulp.task('compile-typescript', function () {
-        return tsProject.src()
-            .pipe(tsProject())
-            .js.pipe(gulp.dest('./wwwroot/js/compiled'));
-    });
+    return gulp.src(['./less/**/*.less'])
+    .pipe(less())
+    .pipe(concat('site-styles.css'))
+    .on('error', function (err) {
+        console.log(err.toString());
+        this.emit('end');
+    })
+    .pipe(gulp.dest('./wwwroot/css'));
+});
 
-gulp.task('default', ['copyNpmLibs','less', 'compile-typescript', 'watch']);
-
-gulp.task('default-ci', ['copyNpmLibs','less', 'compile-typescript']);
+gulp.task('compile-typescript', function () {
+    return tsProject.src()
+        .pipe(tsProject())
+        .js.pipe(gulp.dest('./wwwroot/js/compiled'));
+});
 
 gulp.task('watch', function () {
-    gulp.watch('less/**/*.less', ['less']);
-    gulp.watch('typescript/**/*.ts', ['compile-typescript']);
+    gulp.watch('less/**/*.less', gulp.series('less'));
+    gulp.watch('typescript/**/*.ts', gulp.series('compile-typescript'));
 });
+
+gulp.task('default', gulp.series('copyNpmLibs','less', 'compile-typescript', 'watch'));
+
+gulp.task('default-ci', gulp.series('copyNpmLibs','less', 'compile-typescript'));
+
