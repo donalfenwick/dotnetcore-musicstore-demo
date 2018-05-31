@@ -6,6 +6,7 @@ using IdentityServer4.Extensions;
 using IdentityServer4.ResponseHandling;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Configuration;
 
 namespace IdentityServerControllers
 {
@@ -24,11 +25,14 @@ namespace IdentityServerControllers
         private readonly IDiscoveryResponseGenerator _responseGenerator;
         private readonly ILogger _logger;
         private readonly IdentityServerOptions _options;
-        public CustomOidcConfigController(IDiscoveryResponseGenerator responseGenerator, IdentityServerOptions options, ILogger<CustomOidcConfigController> logger)
+        private readonly IConfiguration _config;
+
+        public CustomOidcConfigController(IDiscoveryResponseGenerator responseGenerator, IdentityServerOptions options, IConfiguration config, ILogger<CustomOidcConfigController> logger)
         {
             _responseGenerator = responseGenerator;
             _options = options;
             _logger = logger;
+            _config = config;
         }
 
         [HttpGet("")]
@@ -40,17 +44,16 @@ namespace IdentityServerControllers
 
             Dictionary<string, object> response = await _responseGenerator.CreateDiscoveryDocumentAsync(baseUrl, issuerUri);
 
-            string internalDockerUrl = "http://identityserver"; // read this from config
-
             // if the document is being accessed via the initernal docker hostname then rewrite the urls
             // used in client side browser redirects to use the base url exposed by docker to the host OS
-            if(baseUrl.StartsWith(internalDockerUrl)){
-                string browserAccessibleBaseUrl = "http://localhost:5601"; // read this from config
-                
+            
+            string browserAccessibleBaseUrl = _config.GetValue<string>("IdentityServerIssuerUri");
+            if(!string.IsNullOrWhiteSpace(browserAccessibleBaseUrl)){
                 response["authorization_endpoint"] = $"{browserAccessibleBaseUrl}/connect/authorize";
                 response["check_session_iframe"]   = $"{browserAccessibleBaseUrl}/connect/checksession";
                 response["end_session_endpoint"]   = $"{browserAccessibleBaseUrl}/connect/endsession";
             }
+        
             return Json(response);
         }
 
