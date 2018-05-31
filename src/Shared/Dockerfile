@@ -6,6 +6,8 @@ FROM microsoft/aspnetcore-build:2.1.300-preview1 AS build-env
 WORKDIR /Shared/Common
 COPY ./Common/*.csproj ./
 RUN dotnet restore
+RUN apt-get -qq update
+RUN apt-get -qq -y install tree
 
 WORKDIR /Shared/Database
 COPY ./Database/*.csproj ./
@@ -23,6 +25,7 @@ COPY ./Database/ ./
 
 WORKDIR /Shared/DatabaseMySqlMigrations
 COPY ./DatabaseMySqlMigrations/ ./
+#RUN tree ./
 
 WORKDIR /Shared
 RUN dotnet build Common/MusicStoreDemo.Common.csproj \

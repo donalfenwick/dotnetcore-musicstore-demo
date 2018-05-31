@@ -1,5 +1,8 @@
 node_modules
-bin
+Database/bin
+Database/obj
+Common/bin
+Common/obj
 obj
 npm-debug.log
 Dockerfile*
