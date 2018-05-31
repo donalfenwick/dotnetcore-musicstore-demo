@@ -34,6 +34,5 @@ COPY ./Common/ ./
 
 #RUN tree ./
 WORKDIR /Shared
-RUN dotnet build Common/MusicStoreDemo.Common.csproj \
-    && dotnet build Database/MusicStoreDemo.Database.csproj \
-    && dotnet build DatabaseMySqlMigrations/DatabaseMySqlMigrations.csproj
+RUN dotnet build Common/MusicStoreDemo.Common.csproj --no-restore  \
+    && dotnet build Database/MusicStoreDemo.Database.csproj --no-restore  
