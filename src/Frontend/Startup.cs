@@ -25,6 +25,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.DataProtection;
+using System.Net.Http;
 
 namespace MusicStoreDemo
 {
@@ -94,6 +95,11 @@ namespace MusicStoreDemo
                     NameClaimType = "sub",
                     RoleClaimType = ClaimTypes.Role,
                 };
+                // if using unsigned certs in dev or in a docker environment where the internal dns name of the
+                // container will be something other than localhost then allow unsigned certs 
+                if(isDevelopmentEnv || environment.EnvironmentName == "localdocker"){
+                    options.BackchannelHttpHandler = new HttpClientHandler { ServerCertificateCustomValidationCallback = delegate { return true; } };
+                }
             });
 
             services.AddCors(options =>

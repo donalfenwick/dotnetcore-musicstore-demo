@@ -150,6 +150,12 @@ namespace oauthtest
                         return Task.FromResult(0);
                     }
                 };
+
+                // if using unsigned certs in dev or in a docker environment where the internal dns name of the
+                // container will be something other than localhost then allow unsigned certs 
+                if(this.isDevEnvironment || _environment.EnvironmentName == "localdocker"){
+                    options.BackchannelHttpHandler = new HttpClientHandler { ServerCertificateCustomValidationCallback = delegate { return true; } };
+                }
             });
 
             // if running on a linux environment dotnet doesn't know where to put the data protection keys by default
