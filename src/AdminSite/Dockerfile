@@ -18,4 +18,7 @@ RUN gulp default-ci \
 FROM microsoft/dotnet:2.1-aspnetcore-runtime
 WORKDIR /app
 COPY --from=build-env /app/out .
+# copy dev certs from base build image
+COPY --from=build-env /root/.aspnet/https /root/.aspnet/https
+
 ENTRYPOINT ["dotnet", "MusicStoreDemo.AdminSite.dll"]

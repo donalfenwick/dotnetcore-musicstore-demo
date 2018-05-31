@@ -16,6 +16,9 @@ RUN curl -SL "https://nodejs.org/dist/v${NODE_VERSION}/node-v${NODE_VERSION}-lin
 RUN apt-get -qq update
 RUN apt-get -qq -y install tree
 
+WORKDIR /root/.aspnet/https
+COPY ./DevCerts/ ./
+
 #copy dependencies and restore in a layer which can be cached by docker
 WORKDIR /Shared/Database
 COPY ./Database/*.csproj ./
