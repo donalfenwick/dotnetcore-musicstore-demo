@@ -3,26 +3,24 @@
     "windowsAuthentication": false,
     "anonymousAuthentication": true,
     "iisExpress": {
-      "applicationUrl": "http://localhost:5604/",
-      "sslPort": 44367
+      "applicationUrl": "http://localhost:8054/",
+      "sslPort": 44354
     }
   },
   "profiles": {
     "IIS Express": {
       "commandName": "IISExpress",
       "launchBrowser": true,
-      "launchUrl": "https://localhost:5604/",
+      "launchUrl": "https://localhost:44354/",
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
       }
     },
     "MusicStoreDemo.AdminSite": {
       "commandName": "Project",
       "launchBrowser": true,
       "environmentVariables": {
-        "ASPNETCORE_ENVIRONMENT": "Development"
       },
-      "applicationUrl": "http://localhost:5604/"
+      "applicationUrl": "https://localhost:44354/;http://localhost:8054/"
     }
   }
 }

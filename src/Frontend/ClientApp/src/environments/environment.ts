@@ -6,6 +6,6 @@
 export const environment = {
   production: false,
   envName: 'Dev',
-  identotyServerAuthority: 'http://localhost:5601/',
-  siteBasePath: 'http://localhost:5600/',
+  identotyServerAuthority: 'https://localhost:44353/',
+  siteBasePath: 'https://localhost:44350/',
 };

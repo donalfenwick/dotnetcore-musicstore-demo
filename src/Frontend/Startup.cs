@@ -33,12 +33,13 @@ namespace MusicStoreDemo
         private readonly IHostingEnvironment environment;
         private readonly IConfiguration configuration;
         private readonly ILogger<Startup> logger;
-
+        private readonly bool isDevelopmentEnv;
         public Startup(IConfiguration configuration, IHostingEnvironment env, ILogger<Startup> logger)
         {
             this.logger = logger;
             this.environment = env;
             this.configuration = configuration;
+            this.isDevelopmentEnv = env.IsDevelopment() || env.EnvironmentName == "Development.osx";
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -101,7 +102,9 @@ namespace MusicStoreDemo
                     builder.WithOrigins(
                         identityServerAuthority.Trim().TrimEnd('/'),
                         "http://localhost:5600", 
-                        "http://localhost:5607"
+                        "http://localhost:5607",
+                        "https://localhost:44350", 
+                        "https://localhost:44357"
                         )
                         .AllowAnyMethod()
                         .AllowAnyHeader()
@@ -155,7 +158,8 @@ namespace MusicStoreDemo
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            
+            if (isDevelopmentEnv)
             {
                 app.UseDeveloperExceptionPage();
             }
@@ -201,7 +205,7 @@ namespace MusicStoreDemo
             {
                 spa.Options.SourcePath = "ClientApp";
 
-                if (env.IsDevelopment())
+                if (isDevelopmentEnv)
                 {
                     spa.UseAngularCliServer(npmScript: "start");
                 }

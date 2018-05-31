@@ -86,7 +86,8 @@ namespace MusicStoreDemo.AdminSite
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            bool isDevEnvironment = env.IsDevelopment() || env.EnvironmentName.StartsWith("Development.");
+            if (isDevEnvironment)
             {
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
