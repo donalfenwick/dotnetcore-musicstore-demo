@@ -7,8 +7,11 @@
   <ItemGroup>
     <Folder Include="Models\User\" />
   </ItemGroup>
+
+  <ItemGroup>
+  </ItemGroup>
   <PropertyGroup>
-    <TargetFramework>netcoreapp2.0</TargetFramework>
+    <TargetFramework>netcoreapp2.1</TargetFramework>
   </PropertyGroup>
 
 </Project>

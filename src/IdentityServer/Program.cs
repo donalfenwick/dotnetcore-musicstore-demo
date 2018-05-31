@@ -14,12 +14,11 @@ namespace MusicStoreDemo.IdentityServer
     {
         public static void Main(string[] args)
         {
-            BuildWebHost(args).Run();
+            CreateWebhostBuilder(args).Build().Run();
         }
 
-        public static IWebHost BuildWebHost(string[] args) =>
+        public static IWebHostBuilder CreateWebhostBuilder(string[] args) =>
          WebHost.CreateDefaultBuilder(args)
-                .UseStartup<Startup>()
-                .Build();
+                .UseStartup<Startup>();
     }
 }

@@ -18,7 +18,6 @@ using System.Reflection;
 using MusicStoreDemo.Common.Repositories;
 using MusicStoreDemo.Common.Mappers;
 using MusicStoreDemo.Common;
-using DatabaseMySqlMigrations;
 using Microsoft.AspNetCore.DataProtection;
 
 namespace MusicStoreDemo.AdminSite
@@ -42,24 +41,9 @@ namespace MusicStoreDemo.AdminSite
             string connectionString = _configuration.GetConnectionString("SqlServerConnection");
             string appDatabaseMigrationsAssembly = typeof(MusicStoreDbContext).GetTypeInfo().Assembly.GetName().Name;
 
-            string databaseProvider =  _configuration.GetValue<string>("MusicStoreAppDatabaseProvider");
-            bool useMySql = false;
-            if(databaseProvider.Equals("MYSQL", StringComparison.InvariantCultureIgnoreCase)){
-                useMySql = true;
-                appDatabaseMigrationsAssembly = typeof(MySqlMusicStoreIdentityServerDesignTimeDbContextFactory).GetTypeInfo().Assembly.GetName().Name;
-                connectionString = _configuration.GetConnectionString("MySqlConnection");
-            }
-
             services.AddDbContext<MusicStoreDbContext>(builder =>
             {
-                if (useMySql)
-                {
-                    builder.UseMySql(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                }
-                else
-                {
-                    builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                }
+                builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
             });
 
             services.AddIdentity<DbUser, DbRole>()
@@ -87,7 +71,8 @@ namespace MusicStoreDemo.AdminSite
             }
 
             services.AddMvc()
-                .AddCookieTempDataProvider();
+                .AddCookieTempDataProvider()
+                .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
 
 			services.AddAuthorization(options =>
             {
@@ -103,15 +88,16 @@ namespace MusicStoreDemo.AdminSite
         {
             if (env.IsDevelopment())
             {
-                app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
                 app.UseDatabaseErrorPage();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
 
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseAuthentication();

@@ -17,7 +17,6 @@ using Microsoft.EntityFrameworkCore;
 using MusicStoreDemo.Database.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
-using DatabaseMySqlMigrations;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -47,32 +46,16 @@ namespace MusicStoreDemo
         {
             
 
-            services.AddMvc();
+            services.AddMvc()
+                .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
 
             string connectionString = configuration.GetConnectionString("SqlServerConnection");
-            bool useMySql = false;
-            string databaseProvider = configuration.GetValue<string>("MusicStoreAppDatabaseProvider");
-            if (databaseProvider.Equals("MYSQL", StringComparison.InvariantCultureIgnoreCase))
-            {
-                useMySql = true;
-                connectionString = configuration.GetConnectionString("MySqlConnection");
-            }
-
 
 
             services.AddDbContext<MusicStoreDbContext>(builder =>
             {
-                if (useMySql)
-                {
-                    string appDatabaseMigrationsAssembly = typeof(MySqlMusicStoreIdentityServerDesignTimeDbContextFactory).GetTypeInfo().Assembly.GetName().Name;
-                    builder.UseMySql(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                }
-                else
-                {
-                    var appDatabaseMigrationsAssembly = typeof(MusicStoreDbContext).GetTypeInfo().Assembly.GetName().Name;
-
-                    builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                }
+                var appDatabaseMigrationsAssembly = typeof(MusicStoreDbContext).GetTypeInfo().Assembly.GetName().Name;
+                builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
             });
 
 
@@ -179,12 +162,14 @@ namespace MusicStoreDemo
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
             
             app.UseAuthentication();
 
             app.UseCors("defaultCorsPolicy");
 
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
