@@ -51,6 +51,7 @@ namespace DatabaseSeeder.IdentityServerDefaults
                 //logout callback URL
                 PostLogoutRedirectUris = new List<string> { $"{mvcClientUrl}/signout-callback-oidc" },
                 FrontChannelLogoutUri = $"{mvcClientUrl}/signout-oidc",
+                AllowedCorsOrigins = new List<string> { mvcClientUrl.Trim().TrimEnd('/') },
                 // cant find this for microsofts OIDC implementation
                 //BackChannelLogoutUri = "??",
                 AllowOfflineAccess = true,
