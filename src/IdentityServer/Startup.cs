@@ -88,7 +88,12 @@ namespace MusicStoreDemo.IdentityServer
                 };
             })
             .AddAspNetIdentity<DbUser>()
-            .AddProfileService<MusicStoreDbProfileService>();
+            .AddProfileService<MusicStoreDbProfileService>()
+            .AddInMemoryCaching()
+            .AddClientStoreCache<IdentityServer4.EntityFramework.Stores.ClientStore>()
+            .AddConfigurationStoreCache()
+            .AddResourceStoreCache<IdentityServer4.EntityFramework.Stores.ResourceStore>();
+            
 
             // if running on a linux environment dotnet doesn't know where to put the data protection keys by default
             if(System.Runtime.InteropServices.RuntimeInformation.IsOSPlatform(OSPlatform.Linux)){
