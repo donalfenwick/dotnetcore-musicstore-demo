@@ -1,5 +1,5 @@
 import { Injectable } from '@angular/core';
-import { UserManager, UserManagerSettings, User, OidcClient } from 'oidc-client';
+import { UserManager, UserManagerSettings, User, OidcClient, MetadataService } from 'oidc-client';
 import { Observable } from 'rxjs';
 
 
@@ -30,6 +30,22 @@ export class AuthService {
       }, (err) => {
         rejectInitAuth(err);
       });
+    });
+  }
+
+  getOidcConfig(): Promise<any>{
+    return new Promise<any>((resolveFn, rejectFn) => {
+      if(this.manager['metadataService']){
+          // es6 getter metadataService is not exposed via typescript. cast the type to access
+        const metadataService = (<MetadataService>(<any>this.manager).metadataService);
+        metadataService.getMetadata().then(configMetadata =>{
+          resolveFn(configMetadata);
+        }, err => {
+          rejectFn(err);
+        });
+      }else{
+        resolveFn(null);
+      } 
     });
   }
 

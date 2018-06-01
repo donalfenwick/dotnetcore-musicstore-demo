@@ -36,7 +36,7 @@ describe('NavmenuComponent', () => {
 
   it('AuthService.startAuthentication() should be called when loginButtonOnClick() is called and user is NOT authenticated', () => {
     let isAuthCallSpy = spyOn(TestBed.get(AuthService), 'isLoggedIn').and.returnValue(false);
-    let startAuthenticationSpy = spyOn(TestBed.get(AuthService), 'startAuthentication');
+    let startAuthenticationSpy = spyOn(TestBed.get(AuthService), 'startAuthentication').and.returnValue(Promise.resolve({}));
 
     component.loginButtonOnClick();
 
@@ -45,7 +45,7 @@ describe('NavmenuComponent', () => {
 
   it('AuthService.startAuthentication() should NOT be called when logoutButtonOnClick() called', () => {
     let isAuthCallSpy = spyOn(TestBed.get(AuthService), 'isLoggedIn').and.returnValue(true);
-    let startAuthenticationSpy = spyOn(TestBed.get(AuthService), 'startAuthentication');
+    let startAuthenticationSpy = spyOn(TestBed.get(AuthService), 'startAuthentication').and.returnValue(Promise.resolve({}));
 
     component.loginButtonOnClick();
 

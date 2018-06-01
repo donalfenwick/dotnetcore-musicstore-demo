@@ -6,6 +6,8 @@ export class AuthServiceMock{
     }
       initAuth(): Promise<any>{return new Promise((r)=>{ r(); })}
 
+      getOidcConfig(): Promise<any>{return Promise.resolve({}); }
+      
       isLoggedIn(): boolean {
         return false;
       }
