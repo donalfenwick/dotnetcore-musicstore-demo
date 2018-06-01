@@ -1,1 +1,1 @@
-aspnet core 2.0 application demonstrating the server side implicit flow when using openid connect with IdentityServer4
+aspnet core 2.1 application demonstrating the server side implicit flow when using openid connect with IdentityServer4
