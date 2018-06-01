@@ -14,12 +14,22 @@ export class NavmenuComponent implements OnInit {
   ngOnInit() {
   }
 
+  loginInProgress: boolean = false;
   searchQuery: string;
 
   loginButtonOnClick():void{
+    
     // if the user is not already logged in redirect them out to the identity server
-    if(!this.authService.isLoggedIn()){
-      this.authService.startAuthentication();
+    if(!this.authService.isLoggedIn() && !this.loginInProgress){
+      this.loginInProgress = true;
+      this.authService.startAuthentication()
+        .catch(err => {
+          this.loginInProgress = false;
+          console.log('error redirecting user at login', err);
+        })
+        .then(() => {
+          // no action, user will be refirected by the service
+        });
     }
   }
 
