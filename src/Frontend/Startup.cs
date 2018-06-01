@@ -17,7 +17,6 @@ using Microsoft.EntityFrameworkCore;
 using MusicStoreDemo.Database.Entities;
 using Microsoft.AspNetCore.Identity;
 using System.Security.Claims;
-using DatabaseMySqlMigrations;
 using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
@@ -26,6 +25,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.AspNetCore.DataProtection;
+using System.Net.Http;
 
 namespace MusicStoreDemo
 {
@@ -34,12 +34,13 @@ namespace MusicStoreDemo
         private readonly IHostingEnvironment environment;
         private readonly IConfiguration configuration;
         private readonly ILogger<Startup> logger;
-
+        private readonly bool isDevelopmentEnv;
         public Startup(IConfiguration configuration, IHostingEnvironment env, ILogger<Startup> logger)
         {
             this.logger = logger;
             this.environment = env;
             this.configuration = configuration;
+            this.isDevelopmentEnv = env.IsDevelopment() || env.EnvironmentName == "Development.osx";
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -47,32 +48,16 @@ namespace MusicStoreDemo
         {
             
 
-            services.AddMvc();
+            services.AddMvc()
+                .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
 
             string connectionString = configuration.GetConnectionString("SqlServerConnection");
-            bool useMySql = false;
-            string databaseProvider = configuration.GetValue<string>("MusicStoreAppDatabaseProvider");
-            if (databaseProvider.Equals("MYSQL", StringComparison.InvariantCultureIgnoreCase))
-            {
-                useMySql = true;
-                connectionString = configuration.GetConnectionString("MySqlConnection");
-            }
-
 
 
             services.AddDbContext<MusicStoreDbContext>(builder =>
             {
-                if (useMySql)
-                {
-                    string appDatabaseMigrationsAssembly = typeof(MySqlMusicStoreIdentityServerDesignTimeDbContextFactory).GetTypeInfo().Assembly.GetName().Name;
-                    builder.UseMySql(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                }
-                else
-                {
-                    var appDatabaseMigrationsAssembly = typeof(MusicStoreDbContext).GetTypeInfo().Assembly.GetName().Name;
-
-                    builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                }
+                var appDatabaseMigrationsAssembly = typeof(MusicStoreDbContext).GetTypeInfo().Assembly.GetName().Name;
+                builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
             });
 
 
@@ -110,6 +95,11 @@ namespace MusicStoreDemo
                     NameClaimType = "sub",
                     RoleClaimType = ClaimTypes.Role,
                 };
+                // if using unsigned certs in dev or in a docker environment where the internal dns name of the
+                // container will be something other than localhost then allow unsigned certs 
+                if(isDevelopmentEnv || environment.EnvironmentName == "localdocker"){
+                    options.BackchannelHttpHandler = new HttpClientHandler { ServerCertificateCustomValidationCallback = delegate { return true; } };
+                }
             });
 
             services.AddCors(options =>
@@ -118,7 +108,9 @@ namespace MusicStoreDemo
                     builder.WithOrigins(
                         identityServerAuthority.Trim().TrimEnd('/'),
                         "http://localhost:5600", 
-                        "http://localhost:5607"
+                        "http://localhost:5607",
+                        "https://localhost:44350", 
+                        "https://localhost:44357"
                         )
                         .AllowAnyMethod()
                         .AllowAnyHeader()
@@ -172,19 +164,22 @@ namespace MusicStoreDemo
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            
+            if (isDevelopmentEnv)
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
             
             app.UseAuthentication();
 
             app.UseCors("defaultCorsPolicy");
 
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
             app.UseSpaStaticFiles();
 
@@ -216,7 +211,7 @@ namespace MusicStoreDemo
             {
                 spa.Options.SourcePath = "ClientApp";
 
-                if (env.IsDevelopment())
+                if (isDevelopmentEnv)
                 {
                     spa.UseAngularCliServer(npmScript: "start");
                 }

@@ -1,0 +1,16 @@
+version: '3'
+
+# if using OSX this docker compose file can be used to start a persistant instance of sql server in a docker container
+
+services:
+  sqlserverdevdb:
+    image: "microsoft/mssql-server-linux"
+    ports:
+      - "1433:1433"
+    environment:
+      SA_PASSWORD: "Your_password123"
+      ACCEPT_EULA: "Y"
+    volumes:
+      - app1_docker_db:/var/lib/mssql
+volumes:
+  app1_docker_db:

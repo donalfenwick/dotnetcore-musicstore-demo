@@ -22,23 +22,12 @@ namespace MusicStoreDemo.Database.Design
                 .AddJsonFile("appsettings.json")
                 .Build();
             var builder = new DbContextOptionsBuilder<ConfigurationDbContext>();
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                //builder.UseSqlite("Filename=./MusicStoreDatabase.sqlite");
-                builder.UseMySql(
-                    configuration.GetConnectionString("MySqlConnection"),
-                    sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly)
-                );
-
-            }
-            else
-            {
-                builder.UseSqlServer(
-                    configuration.GetConnectionString("SqlServerConnection"),
-                    sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly)
-                );
-            }
-
+            
+            builder.UseSqlServer(
+                configuration.GetConnectionString("SqlServerConnection"),
+                sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly)
+            );
+            
             return new ConfigurationDbContext(builder.Options, new ConfigurationStoreOptions());
         }
     }
@@ -53,22 +42,12 @@ namespace MusicStoreDemo.Database.Design
                 .AddJsonFile("appsettings.json")
                 .Build();
             var builder = new DbContextOptionsBuilder<PersistedGrantDbContext>();
-            if (RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
-            {
-                //builder.UseSqlite("Filename=./MusicStoreDatabase.sqlite");
-                builder.UseMySql(
-                    configuration.GetConnectionString("MySqlConnection"),
-                    sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly)
-                );
-
-            }
-            else
-            {
-                builder.UseSqlServer(
-                    configuration.GetConnectionString("SqlServerConnection"),
-                    sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly)
-                );
-            }
+            
+            builder.UseSqlServer(
+                configuration.GetConnectionString("SqlServerConnection"),
+                sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly)
+            );
+        
 
             return new PersistedGrantDbContext(builder.Options,new OperationalStoreOptions());
         }

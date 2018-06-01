@@ -13,23 +13,31 @@ or
 **2: Bootstrap the database**  
 Execute the following commands to run the `DatabaseSeeder` console app to create the database tables and apply configuration/seed data to the DB.  
 
-> `cd DatabaseSeeder; dotnet run`  
+> `cd DatabaseSeeder; dotnet run` 
+  
+*note: if running on OSX sqlserver must first be started, this can be done [via docker](https://database.guide/how-to-install-sql-server-on-a-mac/).  
+Use the `/db/docker-compose.yml` file to start a persistant instance on port 1433.*
+
+**3: Trust aspnet core dev cert**  
+
+Ensure that you have trusted the dev cert that was installed with dotnet core 2.1  
+Run the command `dotnet dev-certs https --trust` to add the default dev cert to your machine.
 
 
-**3: Start the web applications**  
+**4: Start the web applications**  
 
 
-Start the frontend application (`http://localhost:5600`)
+Start the frontend application (`https://localhost:44350`)
 > `cd src/frontend; dotnet run`  
 
-Start the identity server web app (`http://localhost:5601`)
+Start the identity server web app (`https://localhost:44353`)
 > `cd src/IdentityServer; dotnet run`  
 
 Default login credentials are `username: testuser@mysite.com, password: Pa$$word1`.   
   
 ***  
   
-To start and run the management application (`http://localhost:5604`)  
+To start and run the management application (`https://localhost:44354`)  
 `cd src/adminsite`  
 `npm install` (requires node)  
 `gulp` (requires gulp cli)  

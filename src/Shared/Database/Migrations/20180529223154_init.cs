@@ -1,9 +1,8 @@
-﻿using Microsoft.EntityFrameworkCore.Metadata;
+﻿using System;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
-using System;
-using System.Collections.Generic;
 
-namespace DatabaseMySqlMigrations.Migrations
+namespace MusicStoreDemo.Database.Migrations
 {
     public partial class init : Migration
     {
@@ -14,10 +13,10 @@ namespace DatabaseMySqlMigrations.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CreatedUtc = table.Column<DateTime>(nullable: false),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Key = table.Column<string>(maxLength: 100, nullable: true),
                     Name = table.Column<string>(maxLength: 200, nullable: true),
+                    CreatedUtc = table.Column<DateTime>(nullable: false),
                     UpdatedUtc = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -30,9 +29,9 @@ namespace DatabaseMySqlMigrations.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CreatedUtc = table.Column<DateTime>(nullable: false),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Name = table.Column<string>(maxLength: 200, nullable: true),
+                    CreatedUtc = table.Column<DateTime>(nullable: false),
                     UpdatedUtc = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -45,11 +44,11 @@ namespace DatabaseMySqlMigrations.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    CreatedUtc = table.Column<DateTime>(nullable: false),
-                    Data = table.Column<byte[]>(maxLength: 2097152, nullable: true),
-                    Filename = table.Column<string>(maxLength: 200, nullable: true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     MimeType = table.Column<string>(maxLength: 100, nullable: true),
+                    Filename = table.Column<string>(maxLength: 200, nullable: true),
+                    Data = table.Column<byte[]>(maxLength: 2097152, nullable: true),
+                    CreatedUtc = table.Column<DateTime>(nullable: false),
                     UpdatedUtc = table.Column<DateTime>(nullable: false)
                 },
                 constraints: table =>
@@ -62,10 +61,10 @@ namespace DatabaseMySqlMigrations.Migrations
                 columns: table => new
                 {
                     Id = table.Column<string>(nullable: false),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    Description = table.Column<string>(maxLength: 500, nullable: true),
                     Name = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true)
+                    NormalizedName = table.Column<string>(maxLength: 256, nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    Description = table.Column<string>(maxLength: 500, nullable: true)
                 },
                 constraints: table =>
                 {
@@ -76,24 +75,24 @@ namespace DatabaseMySqlMigrations.Migrations
                 name: "User",
                 columns: table => new
                 {
-                    Id = table.Column<string>(nullable: false),
                     AccessFailedCount = table.Column<int>(nullable: false),
-                    ConcurrencyStamp = table.Column<string>(nullable: true),
-                    DateOfBirth = table.Column<DateTime>(nullable: true),
-                    Email = table.Column<string>(maxLength: 256, nullable: true),
                     EmailConfirmed = table.Column<bool>(nullable: false),
-                    Firstname = table.Column<string>(maxLength: 100, nullable: true),
                     LockoutEnabled = table.Column<bool>(nullable: false),
                     LockoutEnd = table.Column<DateTimeOffset>(nullable: true),
-                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
-                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
-                    PasswordHash = table.Column<string>(nullable: true),
-                    PhoneNumber = table.Column<string>(nullable: true),
                     PhoneNumberConfirmed = table.Column<bool>(nullable: false),
-                    SecurityStamp = table.Column<string>(nullable: true),
-                    Surname = table.Column<string>(maxLength: 100, nullable: true),
                     TwoFactorEnabled = table.Column<bool>(nullable: false),
-                    UserName = table.Column<string>(maxLength: 256, nullable: true)
+                    Id = table.Column<string>(nullable: false),
+                    UserName = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedUserName = table.Column<string>(maxLength: 256, nullable: true),
+                    Email = table.Column<string>(maxLength: 256, nullable: true),
+                    NormalizedEmail = table.Column<string>(maxLength: 256, nullable: true),
+                    PasswordHash = table.Column<string>(nullable: true),
+                    SecurityStamp = table.Column<string>(nullable: true),
+                    ConcurrencyStamp = table.Column<string>(nullable: true),
+                    PhoneNumber = table.Column<string>(nullable: true),
+                    Firstname = table.Column<string>(maxLength: 100, nullable: true),
+                    Surname = table.Column<string>(maxLength: 100, nullable: true),
+                    DateOfBirth = table.Column<DateTime>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -105,13 +104,13 @@ namespace DatabaseMySqlMigrations.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    BioImageId = table.Column<int>(nullable: true),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    Name = table.Column<string>(maxLength: 200, nullable: true),
                     BioText = table.Column<string>(maxLength: 2000, nullable: true),
                     CreatedUtc = table.Column<DateTime>(nullable: false),
-                    Name = table.Column<string>(maxLength: 200, nullable: true),
+                    UpdatedUtc = table.Column<DateTime>(nullable: false),
                     PublishStatus = table.Column<int>(nullable: false),
-                    UpdatedUtc = table.Column<DateTime>(nullable: false)
+                    BioImageId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -129,10 +128,10 @@ namespace DatabaseMySqlMigrations.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    RoleId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true),
-                    RoleId = table.Column<string>(nullable: false)
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -150,10 +149,10 @@ namespace DatabaseMySqlMigrations.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    UserId = table.Column<string>(nullable: false),
                     ClaimType = table.Column<string>(nullable: true),
-                    ClaimValue = table.Column<string>(nullable: true),
-                    UserId = table.Column<string>(nullable: false)
+                    ClaimValue = table.Column<string>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -235,19 +234,19 @@ namespace DatabaseMySqlMigrations.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    AlbumCoverImageId = table.Column<int>(nullable: true),
-                    ArtistId = table.Column<int>(nullable: false),
-                    CreatedUtc = table.Column<DateTime>(nullable: false),
-                    DescriptionText = table.Column<string>(maxLength: 2000, nullable: true),
-                    Label = table.Column<string>(maxLength: 200, nullable: true),
-                    Price = table.Column<double>(nullable: false),
-                    Producer = table.Column<string>(maxLength: 200, nullable: true),
-                    PublishStatus = table.Column<int>(nullable: false),
-                    ReleaseDate = table.Column<DateTime>(nullable: false),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(maxLength: 200, nullable: true),
+                    DescriptionText = table.Column<string>(maxLength: 2000, nullable: true),
+                    Producer = table.Column<string>(maxLength: 200, nullable: true),
+                    Label = table.Column<string>(maxLength: 200, nullable: true),
+                    CreatedUtc = table.Column<DateTime>(nullable: false),
+                    UpdatedUtc = table.Column<DateTime>(nullable: false),
                     TotalDurationInSeconds = table.Column<int>(nullable: false),
-                    UpdatedUtc = table.Column<DateTime>(nullable: false)
+                    Price = table.Column<double>(nullable: false),
+                    ReleaseDate = table.Column<DateTime>(nullable: false),
+                    PublishStatus = table.Column<int>(nullable: false),
+                    ArtistId = table.Column<int>(nullable: false),
+                    AlbumCoverImageId = table.Column<int>(nullable: true)
                 },
                 constraints: table =>
                 {
@@ -270,16 +269,15 @@ namespace DatabaseMySqlMigrations.Migrations
                 name: "ArtistGenres",
                 columns: table => new
                 {
-                    ArtistId = table.Column<int>(nullable: false),
-                    GenreId = table.Column<int>(nullable: false),
-                    CreatedUtc = table.Column<DateTime>(nullable: false),
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedUtc = table.Column<DateTime>(nullable: false),
+                    ArtistId = table.Column<int>(nullable: false),
+                    GenreId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_ArtistGenres", x => new { x.ArtistId, x.GenreId });
-                    table.UniqueConstraint("AK_ArtistGenres_Id", x => x.Id);
                     table.ForeignKey(
                         name: "FK_ArtistGenres_Artist_ArtistId",
                         column: x => x.ArtistId,
@@ -298,16 +296,15 @@ namespace DatabaseMySqlMigrations.Migrations
                 name: "AlbumGenres",
                 columns: table => new
                 {
-                    AlbumId = table.Column<int>(nullable: false),
-                    GenreId = table.Column<int>(nullable: false),
-                    CreatedUtc = table.Column<DateTime>(nullable: false),
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedUtc = table.Column<DateTime>(nullable: false),
+                    AlbumId = table.Column<int>(nullable: false),
+                    GenreId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AlbumGenres", x => new { x.AlbumId, x.GenreId });
-                    table.UniqueConstraint("AK_AlbumGenres_Id", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AlbumGenres_Album_AlbumId",
                         column: x => x.AlbumId,
@@ -326,17 +323,16 @@ namespace DatabaseMySqlMigrations.Migrations
                 name: "AlbumGroupListPositions",
                 columns: table => new
                 {
-                    AlbumId = table.Column<int>(nullable: false),
-                    GroupId = table.Column<int>(nullable: false),
-                    CreatedUtc = table.Column<DateTime>(nullable: false),
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    PositionIndex = table.Column<int>(nullable: false)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedUtc = table.Column<DateTime>(nullable: false),
+                    PositionIndex = table.Column<int>(nullable: false),
+                    AlbumId = table.Column<int>(nullable: false),
+                    GroupId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_AlbumGroupListPositions", x => new { x.AlbumId, x.GroupId });
-                    table.UniqueConstraint("AK_AlbumGroupListPositions_Id", x => x.Id);
                     table.ForeignKey(
                         name: "FK_AlbumGroupListPositions_Album_AlbumId",
                         column: x => x.AlbumId,
@@ -356,13 +352,13 @@ namespace DatabaseMySqlMigrations.Migrations
                 columns: table => new
                 {
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn),
-                    AlbumId = table.Column<int>(nullable: false),
-                    CreatedUtc = table.Column<DateTime>(nullable: false),
-                    DurationInSeconds = table.Column<int>(nullable: false),
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
                     Title = table.Column<string>(maxLength: 200, nullable: true),
                     TrackNumber = table.Column<int>(nullable: false),
-                    UpdatedUtc = table.Column<DateTime>(nullable: false)
+                    CreatedUtc = table.Column<DateTime>(nullable: false),
+                    UpdatedUtc = table.Column<DateTime>(nullable: false),
+                    DurationInSeconds = table.Column<int>(nullable: false),
+                    AlbumId = table.Column<int>(nullable: false)
                 },
                 constraints: table =>
                 {
@@ -379,16 +375,15 @@ namespace DatabaseMySqlMigrations.Migrations
                 name: "UserAlbums",
                 columns: table => new
                 {
-                    AlbumId = table.Column<int>(nullable: false),
-                    UserId = table.Column<string>(nullable: false),
-                    CreatedUtc = table.Column<DateTime>(nullable: false),
                     Id = table.Column<int>(nullable: false)
-                        .Annotation("MySql:ValueGenerationStrategy", MySqlValueGenerationStrategy.IdentityColumn)
+                        .Annotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn),
+                    CreatedUtc = table.Column<DateTime>(nullable: false),
+                    AlbumId = table.Column<int>(nullable: false),
+                    UserId = table.Column<string>(nullable: false)
                 },
                 constraints: table =>
                 {
                     table.PrimaryKey("PK_UserAlbums", x => new { x.AlbumId, x.UserId });
-                    table.UniqueConstraint("AK_UserAlbums_Id", x => x.Id);
                     table.ForeignKey(
                         name: "FK_UserAlbums_Album_AlbumId",
                         column: x => x.AlbumId,
@@ -427,7 +422,8 @@ namespace DatabaseMySqlMigrations.Migrations
                 name: "IX_AlbumGroups_Key",
                 table: "AlbumGroups",
                 column: "Key",
-                unique: true);
+                unique: true,
+                filter: "[Key] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Artist_BioImageId",
@@ -458,13 +454,15 @@ namespace DatabaseMySqlMigrations.Migrations
                 name: "IX_Genre_Name",
                 table: "Genre",
                 column: "Name",
-                unique: true);
+                unique: true,
+                filter: "[Name] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "RoleNameIndex",
                 table: "Role",
                 column: "NormalizedName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_Track_AlbumId",
@@ -480,7 +478,8 @@ namespace DatabaseMySqlMigrations.Migrations
                 name: "UserNameIndex",
                 table: "User",
                 column: "NormalizedUserName",
-                unique: true);
+                unique: true,
+                filter: "[NormalizedUserName] IS NOT NULL");
 
             migrationBuilder.CreateIndex(
                 name: "IX_UserAlbums_UserId",

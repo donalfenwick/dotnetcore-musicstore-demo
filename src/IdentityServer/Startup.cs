@@ -25,7 +25,6 @@ using System.Security.Cryptography.X509Certificates;
 using System.IO;
 using Microsoft.Extensions.Logging;
 using IdentityServer4.Validation;
-using DatabaseMySqlMigrations;
 using Microsoft.AspNetCore.DataProtection;
 using IdentityServer4.Services;
 
@@ -51,7 +50,8 @@ namespace MusicStoreDemo.IdentityServer
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddMvc();
+            services.AddMvc()
+                .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
         
             // setup tutorial https://www.scottbrady91.com/Identity-Server/Getting-Started-with-IdentityServer-4
 
@@ -59,24 +59,10 @@ namespace MusicStoreDemo.IdentityServer
             string connectionString = _configuration.GetConnectionString("SqlServerConnection");
             string appDatabaseMigrationsAssembly = typeof(MusicStoreDbContext).GetTypeInfo().Assembly.GetName().Name;
 
-            string databaseProvider =  _configuration.GetValue<string>("MusicStoreAppDatabaseProvider");
-            bool useMySql = false;
-            if(databaseProvider.Equals("MYSQL", StringComparison.InvariantCultureIgnoreCase)){
-                useMySql = true;
-                appDatabaseMigrationsAssembly = typeof(MySqlMusicStoreIdentityServerDesignTimeDbContextFactory).GetTypeInfo().Assembly.GetName().Name;
-                connectionString = _configuration.GetConnectionString("MySqlConnection");
-            }
 
             services.AddDbContext<MusicStoreDbContext>(builder =>
             {
-                if (useMySql)
-                {
-                    builder.UseMySql(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                }
-                else
-                {
-                    builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                }
+                builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
             });
 
             services.AddIdentity<DbUser, DbRole>().AddEntityFrameworkStores<MusicStoreDbContext>();
@@ -90,31 +76,15 @@ namespace MusicStoreDemo.IdentityServer
             {
                 options.ConfigureDbContext = (builder) =>
                 {
-                    if (useMySql)
-                    {
-                        builder.UseMySql(connectionString, sqlOptions =>
+                    builder.UseSqlServer(connectionString, sqlOptions =>
                                             sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                    }
-                    else
-                    {
-                        builder.UseSqlServer(connectionString, sqlOptions =>
-                                                sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                    }
                 };
             }).AddConfigurationStore(options =>
             {
                 options.ConfigureDbContext = (builder) =>
                 {
-                    if (useMySql)
-                    {
-                        builder.UseMySql(connectionString, sqlOptions =>
+                    builder.UseSqlServer(connectionString, sqlOptions =>
                                     sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                    }
-                    else
-                    {
-                        builder.UseSqlServer(connectionString, sqlOptions =>
-                                        sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                    }
                 };
             })
             .AddAspNetIdentity<DbUser>()
@@ -131,15 +101,19 @@ namespace MusicStoreDemo.IdentityServer
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            bool isDevEnvironment = env.IsDevelopment() || env.EnvironmentName.StartsWith("Development.");
+            if (isDevEnvironment)
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
 
+
+            app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             //app.UseCors("defaultCorsPolicy");

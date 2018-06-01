@@ -45,7 +45,6 @@ namespace MusicStoreDemo.Database
             builder.Entity<DbAlbumGroupAlbumPosition>().HasKey(t => new { t.AlbumId, t.GroupId });
             builder.Entity<DbUserPurchasedAlbum>().HasKey(t => new { t.AlbumId, t.UserId });
 
-            builder.ForMySqlUseIdentityColumns();
             builder.ForSqlServerUseIdentityColumns();
 
             // set up unique indexes on any required tables

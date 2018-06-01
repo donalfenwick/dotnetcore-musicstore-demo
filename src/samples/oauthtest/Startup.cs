@@ -22,7 +22,6 @@ using Newtonsoft.Json.Linq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.SpaServices.Webpack;
 using Microsoft.AspNetCore.SpaServices.AngularCli;
-using DatabaseMySqlMigrations;
 using Microsoft.Extensions.Logging;
 using Microsoft.IdentityModel.Protocols.OpenIdConnect;
 using System.Net;
@@ -40,12 +39,14 @@ namespace oauthtest
         private readonly ILogger<Startup> _logger;
         private readonly IConfiguration _configuration;
         private readonly IHostingEnvironment _environment;
+        private readonly bool isDevEnvironment;
 
         public Startup(IConfiguration configuration, IHostingEnvironment environment, ILogger<Startup> logger)
         {
             _logger = logger;
             _configuration = configuration;
             _environment = environment;
+            isDevEnvironment = _environment.IsDevelopment() || _environment.EnvironmentName.StartsWith("Development.");
         }
 
         // This method gets called by the runtime. Use this method to add services to the container.
@@ -55,26 +56,11 @@ namespace oauthtest
             string connectionString = _configuration.GetConnectionString("SqlServerConnection");
             string appDatabaseMigrationsAssembly = typeof(MusicStoreDbContext).GetTypeInfo().Assembly.GetName().Name;
 
-            string databaseProvider = _configuration.GetValue<string>("MusicStoreAppDatabaseProvider");
-            bool useMySql = false;
-            if (databaseProvider.Equals("MYSQL", StringComparison.InvariantCultureIgnoreCase))
-            {
-                useMySql = true;
-                appDatabaseMigrationsAssembly = typeof(MySqlMusicStoreIdentityServerDesignTimeDbContextFactory).GetTypeInfo().Assembly.GetName().Name;
-                connectionString = _configuration.GetConnectionString("MySqlConnection");
-            }
 
 
             services.AddDbContext<MusicStoreDbContext>(builder =>
             {
-                if (useMySql)
-                {
-                    builder.UseMySql(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                }
-                else
-                {
-                    builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                }
+                builder.UseSqlServer(connectionString, sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));             
             });
             services.AddIdentity<DbUser, DbRole>().AddEntityFrameworkStores<MusicStoreDbContext>();
 
@@ -164,6 +150,12 @@ namespace oauthtest
                         return Task.FromResult(0);
                     }
                 };
+
+                // if using unsigned certs in dev or in a docker environment where the internal dns name of the
+                // container will be something other than localhost then allow unsigned certs 
+                if(this.isDevEnvironment || _environment.EnvironmentName == "localdocker"){
+                    options.BackchannelHttpHandler = new HttpClientHandler { ServerCertificateCustomValidationCallback = delegate { return true; } };
+                }
             });
 
             // if running on a linux environment dotnet doesn't know where to put the data protection keys by default
@@ -173,23 +165,26 @@ namespace oauthtest
                     .PersistKeysToFileSystem(new System.IO.DirectoryInfo(@"/var/dpkeys/"));
             }
 
-            services.AddMvc();
+            services.AddMvc()
+                .SetCompatibilityVersion(Microsoft.AspNetCore.Mvc.CompatibilityVersion.Version_2_1);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            if (env.IsDevelopment())
+            if (this.isDevEnvironment)
             {
                 app.UseDeveloperExceptionPage();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
+                app.UseHsts();
             }
 
-            app.UseStaticFiles();
 
+            app.UseHttpsRedirection();
+            app.UseStaticFiles();
             app.UseAuthentication();
 
             app.UseMvc(routes =>

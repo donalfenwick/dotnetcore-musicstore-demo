@@ -117,8 +117,8 @@ namespace DatabaseSeeder
             if (!_identityServerConfigContext.Clients.Any())
             {
                 IdentityServerConfigUrls urls = new IdentityServerConfigUrls(){
-                    AngularAppClientUri = "http://localhost:5600",
-                    MvcClientUri = "http://localhost:5607"
+                    AngularAppClientUri = "https://localhost:44350",
+                    MvcClientUri = "https://localhost:44357"
                 };
 
                 string angularClientUrl = this._configuration.GetValue<string>("AngularAppClientUrl");

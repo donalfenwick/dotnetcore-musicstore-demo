@@ -1,2 +1,0 @@
-Project contains EF database migrations for the MySql provider as migrations for different providers must be maintained in seperate DLL's
-more info: https://docs.microsoft.com/en-us/ef/core/managing-schemas/migrations/providers

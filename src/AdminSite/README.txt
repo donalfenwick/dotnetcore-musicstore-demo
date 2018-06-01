@@ -1,1 +1,1 @@
-aspnet core 2.0 project - used to create and manage content in the database
+aspnet core 2.1 project - used to create and manage content in the database

@@ -1,8 +1,6 @@
+.DS_Store
 node_modules
-Database/bin
-Database/obj
-Common/bin
-Common/obj
+bin
 obj
 npm-debug.log
 Dockerfile*

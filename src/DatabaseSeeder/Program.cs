@@ -15,7 +15,6 @@ using System.Runtime.InteropServices;
 using IdentityServer4.EntityFramework.DbContexts;
 using System.Reflection;
 using DatabaseSeeder.IdentityServerDefaults;
-using DatabaseMySqlMigrations;
 
 namespace DatabaseSeeder
 {
@@ -53,10 +52,12 @@ namespace DatabaseSeeder
         {
             var configBasePath = Directory.GetCurrentDirectory();
 
+            string environmentName = Environment.GetEnvironmentVariable("ASPNETCORE_ENVIRONMENT");
             // build configuration
             IConfigurationRoot configuration = new ConfigurationBuilder()
                 .SetBasePath(configBasePath)
                 .AddJsonFile("appsettings.json", false)
+                .AddJsonFile($"appsettings.{environmentName}.json", true)
                 .AddEnvironmentVariables()
                 .Build();
             
@@ -77,33 +78,15 @@ namespace DatabaseSeeder
             string connectionString = configuration.GetConnectionString("SqlServerConnection");
             string appDatabaseMigrationsAssembly = typeof(MusicStoreDbContext).GetTypeInfo().Assembly.GetName().Name;
 
-            string databaseProvider = configuration.GetValue<string>("MusicStoreAppDatabaseProvider");
-            bool useMySql = false;
-            if(databaseProvider.Equals("MYSQL", StringComparison.InvariantCultureIgnoreCase)){
-                useMySql = true;
-                appDatabaseMigrationsAssembly = typeof(MySqlMusicStoreIdentityServerDesignTimeDbContextFactory).GetTypeInfo().Assembly.GetName().Name;
-                connectionString = configuration.GetConnectionString("MySqlConnection");
-            }
-
-
-
             serviceCollection.AddIdentity<DbUser, DbRole>()
                 .AddEntityFrameworkStores<MusicStoreDbContext>();
 
             
-            if (useMySql)
-            {
-                serviceCollection.AddDbContext<MusicStoreDbContext>(options =>
-                                                                    options.UseMySql(connectionString, 
-                                                                    sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly)));
-            }
-            else
-            {
-                appDatabaseMigrationsAssembly = typeof(MusicStoreDbContext).GetTypeInfo().Assembly.GetName().Name;
-                serviceCollection.AddDbContext<MusicStoreDbContext>(options => 
-                                                                    options.UseSqlServer(connectionString,
-                                                                    sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly)));           
-            }
+            appDatabaseMigrationsAssembly = typeof(MusicStoreDbContext).GetTypeInfo().Assembly.GetName().Name;
+            serviceCollection.AddDbContext<MusicStoreDbContext>(options => 
+                                                                options.UseSqlServer(connectionString,
+                                                                sqlOptions => sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly)));           
+        
 
             serviceCollection.AddIdentityServer()
                     .AddDeveloperSigningCredential()
@@ -111,31 +94,15 @@ namespace DatabaseSeeder
                     {
                         options.ConfigureDbContext = (builder) =>
                         {
-                            if (useMySql)
-                            {
-                                builder.UseMySql(connectionString, sqlOptions =>
-                                                 sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                            }
-                            else
-                            {
-                                builder.UseSqlServer(connectionString, sqlOptions =>
-                                                     sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                            }
+                            builder.UseSqlServer(connectionString, sqlOptions =>
+                                                    sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
                         };
                     }).AddConfigurationStore(options =>
                     {
                         options.ConfigureDbContext = (builder) =>
                         {
-                            if (useMySql)
-                            {
-                                builder.UseMySql(connectionString, sqlOptions =>
-                                         sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                            }
-                            else
-                            {
-                                builder.UseSqlServer(connectionString, sqlOptions =>
-                                             sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
-                            }
+                            builder.UseSqlServer(connectionString, sqlOptions =>
+                                            sqlOptions.MigrationsAssembly(appDatabaseMigrationsAssembly));
                         };
                     })
                     .AddAspNetIdentity<DbUser>();

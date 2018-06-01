@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Collections;
 using System.Threading.Tasks;
 using Microsoft.EntityFrameworkCore;
 using MusicStoreDemo.Database;
@@ -437,10 +438,10 @@ namespace DatabaseSeeder
                         new TrackStruct("Everyone's A V.I.P. To Someone","4:55")
                     });
 
-
+            List<int> groupIds = _context.AlbumGroups.Select(x => x.Id).ToList();
             // randomize the item order in each group
-            foreach(var group in _context.AlbumGroups){
-                var items =  _context.AlbumGroupListPositions.Where(x=>x.GroupId == group.Id)
+            foreach(var groupId in groupIds){
+                var items =  _context.AlbumGroupListPositions.Where(x=>x.GroupId == groupId)
                     .AsEnumerable()
                     .OrderBy(x => Guid.NewGuid());
                 int i = 1;
