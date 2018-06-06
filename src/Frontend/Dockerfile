@@ -9,10 +9,7 @@ RUN dotnet restore
 
 WORKDIR /app/ClientApp
 COPY ./ClientApp/package.json ./ClientApp/package-lock.json ./
-RUN apt-get update \
-    && apt-get install -y bzip2 \ 
-    && npm install phantomjs-prebuilt \
-    && npm install --no-audit
+RUN npm install --no-audit
 
 WORKDIR /app
 # Copy everything else and build

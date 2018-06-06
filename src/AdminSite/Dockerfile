@@ -6,7 +6,6 @@ WORKDIR /app
 # Copy csproj and restore as distinct layers
 COPY ./*.csproj ./package.json ./package-lock.json ./
 RUN dotnet restore \
-    && npm install gulp-cli -g  \
     && npm install --no-audit
 
 # Copy everything else and build
