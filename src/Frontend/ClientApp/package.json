@@ -30,7 +30,7 @@
     "babel-polyfill": "^6.26.0",
     "bootstrap-css-only": "^4.1.0",
     "core-js": "^2.5.5",
-    "oidc-client": "^1.4.1",
+    "oidc-client": "^1.5.1",
     "rxjs": "^6.1.0",
     "zone.js": "^0.8.26"
   },
