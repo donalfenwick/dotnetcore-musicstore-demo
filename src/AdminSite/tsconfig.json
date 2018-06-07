@@ -1,6 +1,6 @@
 {
   "compilerOptions": {
-    "outDir": "./wwwroot/js/compiled",
+    "outFile": "./wwwroot/js/compiled/app-libs.js",
     "target": "es5",
     "noImplicitAny": true,
     "noImplicitReturns": true,
@@ -8,6 +8,7 @@
     "noEmitOnError": true,
     "allowSyntheticDefaultImports": true,
     "removeComments": false,
+    "sourceRoot": "./typescript/",
     "sourceMap": true,
     "strict": true
   },

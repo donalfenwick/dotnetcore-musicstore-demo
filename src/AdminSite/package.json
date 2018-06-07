@@ -21,8 +21,12 @@
     "typescript": "^2.7.2"
   },
   "dependencies": {
+    "bootstrap": "^3.3.7",
     "handlebars": "^4.0.11",
     "html5sortable": "^0.8.1",
-    "jquery-duration-picker": "^1.0.0"
+    "jquery": "^2.2.0",
+    "jquery-duration-picker": "^1.0.0",
+    "jquery-validation": "^1.14.0",
+    "jquery-validation-unobtrusive": "^3.2.10"
   }
 }

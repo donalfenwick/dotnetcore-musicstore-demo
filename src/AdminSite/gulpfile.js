@@ -31,7 +31,7 @@ gulp.task('less', function () {
 gulp.task('compile-typescript', function () {
     return tsProject.src()
         .pipe(tsProject())
-        .js.pipe(gulp.dest('./wwwroot/js/compiled'));
+        .js.pipe(gulp.dest('./'));
 });
 
 gulp.task('watch', function () {
