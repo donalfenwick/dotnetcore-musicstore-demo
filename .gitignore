@@ -263,3 +263,5 @@ src/AdminSite/wwwroot/libs/
 src/AdminSite/wwwroot/js/compiled/
 src/Frontend/ClientApp/coverage/
 src/Frontend/ClientApp/dist/
+src/AdminSite/wwwroot/js/
+src/AdminSite/wwwroot/libs/
