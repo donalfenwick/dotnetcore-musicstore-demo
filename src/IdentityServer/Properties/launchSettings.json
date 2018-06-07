@@ -19,7 +19,7 @@
       "launchBrowser": true,
       "environmentVariables": {
       },
-      "applicationUrl": "https://localhost:8053;http://localhost:44353"
+      "applicationUrl": "https://localhost:44353;http://localhost:8053"
       
     }
   }
